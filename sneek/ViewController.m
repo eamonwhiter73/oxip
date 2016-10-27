@@ -61,7 +61,19 @@ typedef void (^CompletionHandlerType)();
 
 @implementation ViewController {}
 
+- (void)viewDidAppear:(BOOL)animated {
+    
+    MKParentalGateSuccessBlock success = ^{
+        [[self presentedViewController] dismissViewControllerAnimated:NO completion:nil];
+    };
+            
+    if([[(AppDelegate *)[[UIApplication sharedApplication] delegate] ran] intValue] == 2) {
+        [MKParentalGate displayGateWithCurrentViewController:self successBlock:success failureBlock:NULL];
+    }
+}
+
 - (void)viewDidLoad {
+    
     userdefaults = [NSUserDefaults standardUserDefaults];
     
     NSNumber *screenWidth = @([UIScreen mainScreen].bounds.size.width);

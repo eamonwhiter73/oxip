@@ -29,6 +29,10 @@
     //
 }
 
+- (void)setRan:(NSNumber*)x {
+    _ran = x;
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen]bounds]];
     
@@ -81,14 +85,21 @@
         [_locationMgr startMonitoringSignificantLocationChanges];
     }
     
+    _navController = [[UINavigationController alloc] init];
+    _navController.navigationBar.hidden = YES;
+    _ran = [NSNumber numberWithInt:2];
+    
     if([userdefaults objectForKey:@"pfuser"] == nil) {
         SignUpController *signup = [[SignUpController alloc] init];
-        [self.window setRootViewController:signup];
+        [_navController setViewControllers:@[signup]];
     }
+    
     else {
         ViewController *map = [[ViewController alloc] init];
-        [self.window setRootViewController:map];
+        [_navController setViewControllers:@[map]];
     }
+    
+    [self.window setRootViewController:_navController];
     [self.window makeKeyAndVisible];
 
     return YES;

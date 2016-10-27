@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "AFHTTPSessionManager.h"
+#import "MKParentalGate.h"
 @import GoogleMaps;
 
 @interface ViewController : UIViewController <GMSMapViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
