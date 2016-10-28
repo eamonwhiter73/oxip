@@ -1,4 +1,3 @@
-// CItem.m
 #import "Tutorial.h"
 
 @interface Tutorial() {
@@ -57,7 +56,7 @@
             [labe setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:24.0]];
             
         }
-        else if(frame.size.width == 1024) { //IPAD
+        else if(frame.size.width == 1024) {
             camerabut.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"camerabutipadp"]];
             camerabut.frame = CGRectMake(468, 1225, 88, 88);
             labe.frame = CGRectMake(64, 578, 896, 288);

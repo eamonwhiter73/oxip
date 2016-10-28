@@ -48,7 +48,7 @@
         [self requestLocationAuthorization];
     }
     if (status == kCLAuthorizationStatusDenied || status == kCLAuthorizationStatusRestricted) {
-        return; // we weren't allowed to show the user's location so don't enable
+        return;
     }
 }
 
@@ -111,7 +111,7 @@
         signupbut = CGRectMake(70, 540, 235.5, 40);
         signUpButton.layer.cornerRadius = 5.0;
     }
-    if([screenWidth intValue] == 414) { //6+
+    if([screenWidth intValue] == 414) {
         [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"LaunchImage1242"]]];
         
         textfielduse = CGRectMake(77, 402, 260, 40);
@@ -127,7 +127,7 @@
         signUpButton.layer.cornerRadius = 5.0;
         
     }
-    if([screenWidth intValue] == 768) { //ipad2
+    if([screenWidth intValue] == 768) {
         [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"LaunchImage768"]]];
         
         textfielduse = CGRectMake(143, 659, 482, 40);
@@ -146,7 +146,7 @@
         signUpButton.layer.cornerRadius = 10.0;
 
     }
-    if([screenWidth intValue] == 1024) { //IPAD
+    if([screenWidth intValue] == 1024) {
         [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"LaunchImage1024"]]];
         
         textfielduse = CGRectMake(191, 865, 641, 60);

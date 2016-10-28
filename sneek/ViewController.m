@@ -56,7 +56,6 @@ typedef void (^CompletionHandlerType)();
     Tutorial *first;
     RespTutorial *resptute;
     UILabel *tute;
-    BOOL showingEdit;
     InvisibleButtonView *invisible;
 }
 
@@ -203,6 +202,7 @@ typedef void (^CompletionHandlerType)();
         camerabut.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"camerabut"]];
     }
     if([screenWidth intValue] == 375) {
+        invisible = [[InvisibleButtonView alloc] initWithFrame:CGRectMake(0, 637, 80, 30)];
         tute.frame = CGRectMake(23, 105, 328, 141);
         image = [[UIImageView alloc] initWithFrame:CGRectMake(10, 30, 355, 500)];
         image.layer.cornerRadius = 10.0;
@@ -232,7 +232,7 @@ typedef void (^CompletionHandlerType)();
         [notclose setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:14.0]];
     }
     if([screenWidth intValue] == 414) {
-        invisible = [[InvisibleButtonView alloc] initWithFrame:CGRectMake(0, 697, 104, 39)];
+        invisible = [[InvisibleButtonView alloc] initWithFrame:CGRectMake(0, 706, 80, 30)];
         tute.frame = CGRectMake(26, 116, 362, 155.5);
         image = [[UIImageView alloc] initWithFrame:CGRectMake(10, 30, 394, 544)];
         image.layer.cornerRadius = 10.0;
@@ -262,6 +262,7 @@ typedef void (^CompletionHandlerType)();
         [notclose setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:14.0]];
     }
     if([screenWidth intValue] == 768) {
+        invisible = [[InvisibleButtonView alloc] initWithFrame:CGRectMake(0, 994, 80, 30)];
         tute.frame = CGRectMake(48, 161, 671.7, 216.4);
         image = [[UIImageView alloc] initWithFrame:CGRectMake(20, 46, 727, 768)];
         image.layer.cornerRadius = 7.5;
@@ -292,6 +293,7 @@ typedef void (^CompletionHandlerType)();
         [notclose setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:14.0]];
     }
     if([screenWidth intValue] == 1024) {
+        invisible = [[InvisibleButtonView alloc] initWithFrame:CGRectMake(0, 1336, 80, 30)];
         tute.frame = CGRectMake(64, 215, 895.6, 288.7);
         image = [[UIImageView alloc] initWithFrame:CGRectMake(27, 60, 969, 1009)];
         image.layer.cornerRadius = 5.0;
@@ -322,8 +324,6 @@ typedef void (^CompletionHandlerType)();
         [notclose setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:28.0]];
     }
     
-    /*[invisible setUserInteractionEnabled:NO];
-    invisible.backgroundColor = [UIColor redColor];*/
     [self.view addSubview:invisible];
 
     tute.text = @"TAP THE MARKER, THEN TAP THE INFO WINDOW POPUP";

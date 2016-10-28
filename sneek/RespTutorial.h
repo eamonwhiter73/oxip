@@ -1,4 +1,3 @@
-//tutorial.h
 #import <UIKit/UIKit.h>
 #import "ViewController.h"
 

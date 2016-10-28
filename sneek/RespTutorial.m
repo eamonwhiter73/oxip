@@ -1,4 +1,3 @@
-// CItem.m
 #import "RespTutorial.h"
 
 @interface RespTutorial() {
@@ -62,7 +61,7 @@
             respbut.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:36.0];
             labe.frame = CGRectMake(48, 192, 672, 721);
         }
-        else if(frame.size.width == 1024) { //IPAD
+        else if(frame.size.width == 1024) {
             respbut.frame = CGRectMake(27, 1096, 969, 230);
             respbut.layer.cornerRadius = 5.0;
             respbut.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:60.0];
