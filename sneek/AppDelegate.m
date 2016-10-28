@@ -29,10 +29,6 @@
     //
 }
 
-- (void)setRan:(NSNumber*)x {
-    _ran = x;
-}
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen]bounds]];
     
@@ -87,7 +83,6 @@
     
     _navController = [[UINavigationController alloc] init];
     _navController.navigationBar.hidden = YES;
-    _ran = [NSNumber numberWithInt:2];
     
     if([userdefaults objectForKey:@"pfuser"] == nil) {
         SignUpController *signup = [[SignUpController alloc] init];

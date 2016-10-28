@@ -14,6 +14,7 @@
 #import "Tutorial.h"
 #import "RespTutorial.h"
 #import "AppDelegate.h"
+#import "InvisibleButtonView.h"
 
 @import GoogleMaps;
 
@@ -55,24 +56,59 @@ typedef void (^CompletionHandlerType)();
     Tutorial *first;
     RespTutorial *resptute;
     UILabel *tute;
+    BOOL showingEdit;
+    InvisibleButtonView *invisible;
 }
 
 @end
 
 @implementation ViewController {}
 
-- (void)viewDidAppear:(BOOL)animated {
-    
+/*- (void) applicationWillResign {
     MKParentalGateSuccessBlock success = ^{
-        [[self presentedViewController] dismissViewControllerAnimated:NO completion:nil];
+        [[self presentedViewController] dismissViewControllerAnimated:NO completion:^{
+            [[NSNotificationCenter defaultCenter] removeObserver:self];
+        }];
     };
-            
-    if([[(AppDelegate *)[[UIApplication sharedApplication] delegate] ran] intValue] == 2) {
-        [MKParentalGate displayGateWithCurrentViewController:self successBlock:success failureBlock:NULL];
+    
+    [MKParentalGate displayGateWithCurrentViewController:self successBlock:success failureBlock:NULL];
+}*/
+
+/*- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    NSLog(@"in touches began************"); //TEST THIS!!!!!
+    UITouch * touch = (UITouch *)[touches anyObject];
+    CGPoint location = [touch locationInView:self.view];
+    
+    if (location.y > 538 && location.x < 80)
+    {
+        showingEdit = TRUE;
+        [self touchesCancelled:touches withEvent:event];
+        NSLog(@"touched google link part*************");
+    }
+    else {
+        NSLog(@"touched somewhere ELSE*************");
+        showingEdit = FALSE;
+        [self touchesEnded:touches withEvent:event];
     }
 }
 
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    if (!showingEdit) {
+        [self touchesEnded:touches withEvent:event];
+    }
+}*/
+
 - (void)viewDidLoad {
+    
+    /*[[NSNotificationCenter defaultCenter]
+     addObserver:self
+     selector:@selector(applicationWillResign)
+     name:UIApplicationWillResignActiveNotification
+     object:nil];*/
+    
+    //showingEdit = FALSE;
     
     userdefaults = [NSUserDefaults standardUserDefaults];
     
@@ -179,8 +215,9 @@ typedef void (^CompletionHandlerType)();
     style.tailIndent = -5.0f;
     
     NSAttributedString *attrText = [[NSAttributedString alloc] initWithString:@"MY MATCHES" attributes:@{ NSParagraphStyleAttributeName : style, NSForegroundColorAttributeName : [UIColor colorWithRed:211.0f/255.0f green:243.0f/255.0f blue:219.0f/255.0f alpha:1.0f], NSFontAttributeName : [UIFont fontWithName:@"HelveticaNeue-Bold" size:16.0]}];
-
+    
     if([screenWidth intValue] == 320) {
+        invisible = [[InvisibleButtonView alloc] initWithFrame:CGRectMake(0, 538, 80, 30)];
         tute.frame = CGRectMake(20, 90, 280, 120);
         image = [[UIImageView alloc] initWithFrame:CGRectMake(10, 30, 300, 426)];
         image.layer.cornerRadius = 10.0;
@@ -239,6 +276,7 @@ typedef void (^CompletionHandlerType)();
         [notclose setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:14.0]];
     }
     if([screenWidth intValue] == 414) {
+        invisible = [[InvisibleButtonView alloc] initWithFrame:CGRectMake(0, 697, 104, 39)];
         tute.frame = CGRectMake(26, 116, 362, 155.5);
         image = [[UIImageView alloc] initWithFrame:CGRectMake(10, 30, 394, 544)];
         image.layer.cornerRadius = 10.0;
@@ -327,6 +365,10 @@ typedef void (^CompletionHandlerType)();
         notclose.layer.cornerRadius = 5.0;
         [notclose setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:28.0]];
     }
+    
+    /*[invisible setUserInteractionEnabled:NO];
+    invisible.backgroundColor = [UIColor redColor];*/
+    [self.view addSubview:invisible];
 
     tute.text = @"TAP THE MARKER, THEN TAP THE INFO WINDOW POPUP";
     tute.numberOfLines = 0;
@@ -756,6 +798,8 @@ typedef void (^CompletionHandlerType)();
     
     return randomString;
 }
+
+
 
 - (void)imagePickerController:(UIImagePickerController *)pickery didFinishPickingMediaWithInfo:(NSDictionary *)info {
     UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];

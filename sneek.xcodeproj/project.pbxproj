@@ -29,26 +29,7 @@
 		DD5537A01C06A3A1002B52DD /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD55379F1C06A3A1002B52DD /* Accounts.framework */; };
 		DD5537A21C06A3A7002B52DD /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD5537A11C06A3A7002B52DD /* Social.framework */; };
 		DD68D60E1D961FC5007B5E36 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD68D60D1D961FC4007B5E36 /* UserNotifications.framework */; };
-		DD78FD911DC153A9000BEA93 /* MKSoundCoordinatedAnimationLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DD78FD891DC153A9000BEA93 /* MKSoundCoordinatedAnimationLayer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		DD78FD921DC153A9000BEA93 /* MKSoundCoordinatedAnimationView.m in Sources */ = {isa = PBXBuildFile; fileRef = DD78FD8B1DC153A9000BEA93 /* MKSoundCoordinatedAnimationView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		DD78FD931DC153A9000BEA93 /* MKTouchTrackingAnimationView.m in Sources */ = {isa = PBXBuildFile; fileRef = DD78FD8E1DC153A9000BEA93 /* MKTouchTrackingAnimationView.m */; };
-		DD78FD941DC153A9000BEA93 /* MKTouchTrackingView.m in Sources */ = {isa = PBXBuildFile; fileRef = DD78FD901DC153A9000BEA93 /* MKTouchTrackingView.m */; };
-		DD78FDBA1DC153BE000BEA93 /* MKParentalGateViewController~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = DD78FD961DC153BE000BEA93 /* MKParentalGateViewController~ipad.xib */; };
-		DD78FDBB1DC153BE000BEA93 /* MKParentalGateViewController~landscape.xib in Resources */ = {isa = PBXBuildFile; fileRef = DD78FD981DC153BE000BEA93 /* MKParentalGateViewController~landscape.xib */; };
-		DD78FDBC1DC153BE000BEA93 /* MKParentalGateViewController~portrait.xib in Resources */ = {isa = PBXBuildFile; fileRef = DD78FD9A1DC153BE000BEA93 /* MKParentalGateViewController~portrait.xib */; };
-		DD78FDBD1DC153BE000BEA93 /* bottom-dot.ai in Resources */ = {isa = PBXBuildFile; fileRef = DD78FDA01DC153BE000BEA93 /* bottom-dot.ai */; };
-		DD78FDBE1DC153BE000BEA93 /* bottom-dot.png in Resources */ = {isa = PBXBuildFile; fileRef = DD78FDA11DC153BE000BEA93 /* bottom-dot.png */; };
-		DD78FDBF1DC153BE000BEA93 /* bottom-dot@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DD78FDA21DC153BE000BEA93 /* bottom-dot@2x.png */; };
-		DD78FDC01DC153BE000BEA93 /* stop-icon.ai in Resources */ = {isa = PBXBuildFile; fileRef = DD78FDA31DC153BE000BEA93 /* stop-icon.ai */; };
-		DD78FDC11DC153BE000BEA93 /* stop.png in Resources */ = {isa = PBXBuildFile; fileRef = DD78FDA41DC153BE000BEA93 /* stop.png */; };
-		DD78FDC21DC153BE000BEA93 /* stop@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DD78FDA51DC153BE000BEA93 /* stop@2x.png */; };
-		DD78FDC31DC153BE000BEA93 /* top-dot.ai in Resources */ = {isa = PBXBuildFile; fileRef = DD78FDA61DC153BE000BEA93 /* top-dot.ai */; };
-		DD78FDC41DC153BE000BEA93 /* top-dot.png in Resources */ = {isa = PBXBuildFile; fileRef = DD78FDA71DC153BE000BEA93 /* top-dot.png */; };
-		DD78FDC51DC153BE000BEA93 /* top-dot@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DD78FDA81DC153BE000BEA93 /* top-dot@2x.png */; };
-		DD78FDC61DC153BE000BEA93 /* MKParentalGate.m in Sources */ = {isa = PBXBuildFile; fileRef = DD78FDB01DC153BE000BEA93 /* MKParentalGate.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		DD78FDC71DC153BE000BEA93 /* MKParentalGateTouchCancelView.m in Sources */ = {isa = PBXBuildFile; fileRef = DD78FDB21DC153BE000BEA93 /* MKParentalGateTouchCancelView.m */; };
-		DD78FDC81DC153BE000BEA93 /* MKParentalGateTouchTargetView.m in Sources */ = {isa = PBXBuildFile; fileRef = DD78FDB41DC153BE000BEA93 /* MKParentalGateTouchTargetView.m */; };
-		DD78FDC91DC153BE000BEA93 /* MKParentalGateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DD78FDB61DC153BE000BEA93 /* MKParentalGateViewController.m */; };
+		DD78FDD51DC2E8E9000BEA93 /* InvisibleButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = DD78FDD41DC2E8E9000BEA93 /* InvisibleButtonView.m */; };
 		DD8D199E1C26E84F000E7418 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD8D199C1C26E84F000E7418 /* Bolts.framework */; };
 		DD8D199F1C26E84F000E7418 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD8D199D1C26E84F000E7418 /* Parse.framework */; };
 		DD8D19A21C28C267000E7418 /* LeaderboardController.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8D19A11C28C267000E7418 /* LeaderboardController.m */; };
@@ -126,46 +107,8 @@
 		DD55379F1C06A3A1002B52DD /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		DD5537A11C06A3A7002B52DD /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		DD68D60D1D961FC4007B5E36 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
-		DD78FD881DC153A9000BEA93 /* MKSoundCoordinatedAnimationLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKSoundCoordinatedAnimationLayer.h; sourceTree = "<group>"; };
-		DD78FD891DC153A9000BEA93 /* MKSoundCoordinatedAnimationLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MKSoundCoordinatedAnimationLayer.m; sourceTree = "<group>"; };
-		DD78FD8A1DC153A9000BEA93 /* MKSoundCoordinatedAnimationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKSoundCoordinatedAnimationView.h; sourceTree = "<group>"; };
-		DD78FD8B1DC153A9000BEA93 /* MKSoundCoordinatedAnimationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MKSoundCoordinatedAnimationView.m; sourceTree = "<group>"; };
-		DD78FD8D1DC153A9000BEA93 /* MKTouchTrackingAnimationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKTouchTrackingAnimationView.h; sourceTree = "<group>"; };
-		DD78FD8E1DC153A9000BEA93 /* MKTouchTrackingAnimationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MKTouchTrackingAnimationView.m; sourceTree = "<group>"; };
-		DD78FD8F1DC153A9000BEA93 /* MKTouchTrackingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKTouchTrackingView.h; sourceTree = "<group>"; };
-		DD78FD901DC153A9000BEA93 /* MKTouchTrackingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MKTouchTrackingView.m; sourceTree = "<group>"; };
-		DD78FD971DC153BE000BEA93 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "en.lproj/MKParentalGateViewController~ipad.xib"; sourceTree = "<group>"; };
-		DD78FD991DC153BE000BEA93 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "en.lproj/MKParentalGateViewController~landscape.xib"; sourceTree = "<group>"; };
-		DD78FD9B1DC153BE000BEA93 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "en.lproj/MKParentalGateViewController~portrait.xib"; sourceTree = "<group>"; };
-		DD78FD9C1DC153BE000BEA93 /* fr */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = fr; path = "fr.lproj/MKParentalGateViewController~ipad.xib"; sourceTree = "<group>"; };
-		DD78FD9D1DC153BE000BEA93 /* fr */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = fr; path = "fr.lproj/MKParentalGateViewController~landscape.xib"; sourceTree = "<group>"; };
-		DD78FD9E1DC153BE000BEA93 /* fr */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = fr; path = "fr.lproj/MKParentalGateViewController~portrait.xib"; sourceTree = "<group>"; };
-		DD78FDA01DC153BE000BEA93 /* bottom-dot.ai */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "bottom-dot.ai"; sourceTree = "<group>"; };
-		DD78FDA11DC153BE000BEA93 /* bottom-dot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bottom-dot.png"; sourceTree = "<group>"; };
-		DD78FDA21DC153BE000BEA93 /* bottom-dot@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bottom-dot@2x.png"; sourceTree = "<group>"; };
-		DD78FDA31DC153BE000BEA93 /* stop-icon.ai */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "stop-icon.ai"; sourceTree = "<group>"; };
-		DD78FDA41DC153BE000BEA93 /* stop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stop.png; sourceTree = "<group>"; };
-		DD78FDA51DC153BE000BEA93 /* stop@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stop@2x.png"; sourceTree = "<group>"; };
-		DD78FDA61DC153BE000BEA93 /* top-dot.ai */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "top-dot.ai"; sourceTree = "<group>"; };
-		DD78FDA71DC153BE000BEA93 /* top-dot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "top-dot.png"; sourceTree = "<group>"; };
-		DD78FDA81DC153BE000BEA93 /* top-dot@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "top-dot@2x.png"; sourceTree = "<group>"; };
-		DD78FDA91DC153BE000BEA93 /* ja */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ja; path = "ja.lproj/MKParentalGateViewController~ipad.xib"; sourceTree = "<group>"; };
-		DD78FDAA1DC153BE000BEA93 /* ja */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ja; path = "ja.lproj/MKParentalGateViewController~landscape.xib"; sourceTree = "<group>"; };
-		DD78FDAB1DC153BE000BEA93 /* ja */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ja; path = "ja.lproj/MKParentalGateViewController~portrait.xib"; sourceTree = "<group>"; };
-		DD78FDAC1DC153BE000BEA93 /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ko; path = "ko.lproj/MKParentalGateViewController~ipad.xib"; sourceTree = "<group>"; };
-		DD78FDAD1DC153BE000BEA93 /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ko; path = "ko.lproj/MKParentalGateViewController~landscape.xib"; sourceTree = "<group>"; };
-		DD78FDAE1DC153BE000BEA93 /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ko; path = "ko.lproj/MKParentalGateViewController~portrait.xib"; sourceTree = "<group>"; };
-		DD78FDAF1DC153BE000BEA93 /* MKParentalGate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKParentalGate.h; sourceTree = "<group>"; };
-		DD78FDB01DC153BE000BEA93 /* MKParentalGate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MKParentalGate.m; sourceTree = "<group>"; };
-		DD78FDB11DC153BE000BEA93 /* MKParentalGateTouchCancelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKParentalGateTouchCancelView.h; sourceTree = "<group>"; };
-		DD78FDB21DC153BE000BEA93 /* MKParentalGateTouchCancelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MKParentalGateTouchCancelView.m; sourceTree = "<group>"; };
-		DD78FDB31DC153BE000BEA93 /* MKParentalGateTouchTargetView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKParentalGateTouchTargetView.h; sourceTree = "<group>"; };
-		DD78FDB41DC153BE000BEA93 /* MKParentalGateTouchTargetView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MKParentalGateTouchTargetView.m; sourceTree = "<group>"; };
-		DD78FDB51DC153BE000BEA93 /* MKParentalGateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKParentalGateViewController.h; sourceTree = "<group>"; };
-		DD78FDB61DC153BE000BEA93 /* MKParentalGateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MKParentalGateViewController.m; sourceTree = "<group>"; };
-		DD78FDB71DC153BE000BEA93 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hans"; path = "zh-Hans.lproj/MKParentalGateViewController~ipad.xib"; sourceTree = "<group>"; };
-		DD78FDB81DC153BE000BEA93 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hans"; path = "zh-Hans.lproj/MKParentalGateViewController~landscape.xib"; sourceTree = "<group>"; };
-		DD78FDB91DC153BE000BEA93 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hans"; path = "zh-Hans.lproj/MKParentalGateViewController~portrait.xib"; sourceTree = "<group>"; };
+		DD78FDD31DC2E74D000BEA93 /* InvisibleButtonView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InvisibleButtonView.h; sourceTree = "<group>"; };
+		DD78FDD41DC2E8E9000BEA93 /* InvisibleButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InvisibleButtonView.m; sourceTree = "<group>"; };
 		DD8D199C1C26E84F000E7418 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		DD8D199D1C26E84F000E7418 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		DD8D19A01C28C257000E7418 /* LeaderboardController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LeaderboardController.h; sourceTree = "<group>"; };
@@ -329,9 +272,8 @@
 				DDD0501E1D82051300056C33 /* Tutorial.m */,
 				DD08D70A1D8495A5002D9D11 /* RespTutorial.h */,
 				DD08D70B1D8495B2002D9D11 /* RespTutorial.m */,
-				DD78FD951DC153BE000BEA93 /* MKParentalGate */,
-				DD78FD871DC153A9000BEA93 /* MKSoundCoordinatedAnimationView */,
-				DD78FD8C1DC153A9000BEA93 /* MKTouchTrackingView */,
+				DD78FDD41DC2E8E9000BEA93 /* InvisibleButtonView.m */,
+				DD78FDD31DC2E74D000BEA93 /* InvisibleButtonView.h */,
 			);
 			path = sneek;
 			sourceTree = "<group>";
@@ -360,63 +302,6 @@
 				DD3001221C067A95002E43C1 /* Info.plist */,
 			);
 			path = sneekUITests;
-			sourceTree = "<group>";
-		};
-		DD78FD871DC153A9000BEA93 /* MKSoundCoordinatedAnimationView */ = {
-			isa = PBXGroup;
-			children = (
-				DD78FD881DC153A9000BEA93 /* MKSoundCoordinatedAnimationLayer.h */,
-				DD78FD891DC153A9000BEA93 /* MKSoundCoordinatedAnimationLayer.m */,
-				DD78FD8A1DC153A9000BEA93 /* MKSoundCoordinatedAnimationView.h */,
-				DD78FD8B1DC153A9000BEA93 /* MKSoundCoordinatedAnimationView.m */,
-			);
-			path = MKSoundCoordinatedAnimationView;
-			sourceTree = "<group>";
-		};
-		DD78FD8C1DC153A9000BEA93 /* MKTouchTrackingView */ = {
-			isa = PBXGroup;
-			children = (
-				DD78FD8D1DC153A9000BEA93 /* MKTouchTrackingAnimationView.h */,
-				DD78FD8E1DC153A9000BEA93 /* MKTouchTrackingAnimationView.m */,
-				DD78FD8F1DC153A9000BEA93 /* MKTouchTrackingView.h */,
-				DD78FD901DC153A9000BEA93 /* MKTouchTrackingView.m */,
-			);
-			path = MKTouchTrackingView;
-			sourceTree = "<group>";
-		};
-		DD78FD951DC153BE000BEA93 /* MKParentalGate */ = {
-			isa = PBXGroup;
-			children = (
-				DD78FD961DC153BE000BEA93 /* MKParentalGateViewController~ipad.xib */,
-				DD78FD981DC153BE000BEA93 /* MKParentalGateViewController~landscape.xib */,
-				DD78FD9A1DC153BE000BEA93 /* MKParentalGateViewController~portrait.xib */,
-				DD78FD9F1DC153BE000BEA93 /* icons */,
-				DD78FDAF1DC153BE000BEA93 /* MKParentalGate.h */,
-				DD78FDB01DC153BE000BEA93 /* MKParentalGate.m */,
-				DD78FDB11DC153BE000BEA93 /* MKParentalGateTouchCancelView.h */,
-				DD78FDB21DC153BE000BEA93 /* MKParentalGateTouchCancelView.m */,
-				DD78FDB31DC153BE000BEA93 /* MKParentalGateTouchTargetView.h */,
-				DD78FDB41DC153BE000BEA93 /* MKParentalGateTouchTargetView.m */,
-				DD78FDB51DC153BE000BEA93 /* MKParentalGateViewController.h */,
-				DD78FDB61DC153BE000BEA93 /* MKParentalGateViewController.m */,
-			);
-			path = MKParentalGate;
-			sourceTree = "<group>";
-		};
-		DD78FD9F1DC153BE000BEA93 /* icons */ = {
-			isa = PBXGroup;
-			children = (
-				DD78FDA01DC153BE000BEA93 /* bottom-dot.ai */,
-				DD78FDA11DC153BE000BEA93 /* bottom-dot.png */,
-				DD78FDA21DC153BE000BEA93 /* bottom-dot@2x.png */,
-				DD78FDA31DC153BE000BEA93 /* stop-icon.ai */,
-				DD78FDA41DC153BE000BEA93 /* stop.png */,
-				DD78FDA51DC153BE000BEA93 /* stop@2x.png */,
-				DD78FDA61DC153BE000BEA93 /* top-dot.ai */,
-				DD78FDA71DC153BE000BEA93 /* top-dot.png */,
-				DD78FDA81DC153BE000BEA93 /* top-dot@2x.png */,
-			);
-			path = icons;
 			sourceTree = "<group>";
 		};
 		DDA63BF71D63BC5B00A9E878 /* AFNetworking */ = {
@@ -553,18 +438,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				DD5537801C068A2A002B52DD /* Images.xcassets in Resources */,
-				DD78FDBD1DC153BE000BEA93 /* bottom-dot.ai in Resources */,
-				DD78FDC21DC153BE000BEA93 /* stop@2x.png in Resources */,
-				DD78FDC11DC153BE000BEA93 /* stop.png in Resources */,
-				DD78FDBF1DC153BE000BEA93 /* bottom-dot@2x.png in Resources */,
-				DD78FDC41DC153BE000BEA93 /* top-dot.png in Resources */,
-				DD78FDBE1DC153BE000BEA93 /* bottom-dot.png in Resources */,
-				DD78FDC31DC153BE000BEA93 /* top-dot.ai in Resources */,
-				DD78FDC51DC153BE000BEA93 /* top-dot@2x.png in Resources */,
-				DD78FDC01DC153BE000BEA93 /* stop-icon.ai in Resources */,
-				DD78FDBB1DC153BE000BEA93 /* MKParentalGateViewController~landscape.xib in Resources */,
-				DD78FDBC1DC153BE000BEA93 /* MKParentalGateViewController~portrait.xib in Resources */,
-				DD78FDBA1DC153BE000BEA93 /* MKParentalGateViewController~ipad.xib in Resources */,
 				DDC6395C1D7922A200F765DF /* LaunchScreenNew.storyboard in Resources */,
 				DDA63BD21D63B57200A9E878 /* GoogleMaps.bundle in Resources */,
 			);
@@ -592,26 +465,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				DD3001061C067A95002E43C1 /* sneek.xcdatamodeld in Sources */,
-				DD78FD941DC153A9000BEA93 /* MKTouchTrackingView.m in Sources */,
+				DD78FDD51DC2E8E9000BEA93 /* InvisibleButtonView.m in Sources */,
 				DDD0501F1D82051400056C33 /* Tutorial.m in Sources */,
 				DDA63C071D63BC5C00A9E878 /* AFSecurityPolicy.m in Sources */,
-				DD78FDC61DC153BE000BEA93 /* MKParentalGate.m in Sources */,
 				DD3001001C067A95002E43C1 /* ViewController.m in Sources */,
-				DD78FDC71DC153BE000BEA93 /* MKParentalGateTouchCancelView.m in Sources */,
 				DD3001301C0683AA002E43C1 /* SignUpController.m in Sources */,
-				DD78FDC91DC153BE000BEA93 /* MKParentalGateViewController.m in Sources */,
-				DD78FD911DC153A9000BEA93 /* MKSoundCoordinatedAnimationLayer.m in Sources */,
 				DDA63C091D63BC5C00A9E878 /* AFURLResponseSerialization.m in Sources */,
 				DD8D19A21C28C267000E7418 /* LeaderboardController.m in Sources */,
 				DD3000FD1C067A95002E43C1 /* AppDelegate.m in Sources */,
 				DD1F1CB41D6647FF00D55484 /* main.m in Sources */,
 				DDA63C051D63BC5C00A9E878 /* AFHTTPSessionManager.m in Sources */,
-				DD78FDC81DC153BE000BEA93 /* MKParentalGateTouchTargetView.m in Sources */,
 				DDA63C081D63BC5C00A9E878 /* AFURLRequestSerialization.m in Sources */,
-				DD78FD921DC153A9000BEA93 /* MKSoundCoordinatedAnimationView.m in Sources */,
 				DD08D70C1D8495B2002D9D11 /* RespTutorial.m in Sources */,
 				DDA63C0A1D63BC5C00A9E878 /* AFURLSessionManager.m in Sources */,
-				DD78FD931DC153A9000BEA93 /* MKTouchTrackingAnimationView.m in Sources */,
 				DDA63C061D63BC5C00A9E878 /* AFNetworkReachabilityManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -646,45 +512,6 @@
 			targetProxy = DD30011D1C067A95002E43C1 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		DD78FD961DC153BE000BEA93 /* MKParentalGateViewController~ipad.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				DD78FD971DC153BE000BEA93 /* en */,
-				DD78FD9C1DC153BE000BEA93 /* fr */,
-				DD78FDA91DC153BE000BEA93 /* ja */,
-				DD78FDAC1DC153BE000BEA93 /* ko */,
-				DD78FDB71DC153BE000BEA93 /* zh-Hans */,
-			);
-			name = "MKParentalGateViewController~ipad.xib";
-			sourceTree = "<group>";
-		};
-		DD78FD981DC153BE000BEA93 /* MKParentalGateViewController~landscape.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				DD78FD991DC153BE000BEA93 /* en */,
-				DD78FD9D1DC153BE000BEA93 /* fr */,
-				DD78FDAA1DC153BE000BEA93 /* ja */,
-				DD78FDAD1DC153BE000BEA93 /* ko */,
-				DD78FDB81DC153BE000BEA93 /* zh-Hans */,
-			);
-			name = "MKParentalGateViewController~landscape.xib";
-			sourceTree = "<group>";
-		};
-		DD78FD9A1DC153BE000BEA93 /* MKParentalGateViewController~portrait.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				DD78FD9B1DC153BE000BEA93 /* en */,
-				DD78FD9E1DC153BE000BEA93 /* fr */,
-				DD78FDAB1DC153BE000BEA93 /* ja */,
-				DD78FDAE1DC153BE000BEA93 /* ko */,
-				DD78FDB91DC153BE000BEA93 /* zh-Hans */,
-			);
-			name = "MKParentalGateViewController~portrait.xib";
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		DD3001231C067A95002E43C1 /* Debug */ = {

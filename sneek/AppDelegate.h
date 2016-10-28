@@ -24,7 +24,6 @@
 
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;
-- (void)setRan:(NSNumber*)x;
 
 @end
 
