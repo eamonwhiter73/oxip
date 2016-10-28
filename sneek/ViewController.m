@@ -64,51 +64,7 @@ typedef void (^CompletionHandlerType)();
 
 @implementation ViewController {}
 
-/*- (void) applicationWillResign {
-    MKParentalGateSuccessBlock success = ^{
-        [[self presentedViewController] dismissViewControllerAnimated:NO completion:^{
-            [[NSNotificationCenter defaultCenter] removeObserver:self];
-        }];
-    };
-    
-    [MKParentalGate displayGateWithCurrentViewController:self successBlock:success failureBlock:NULL];
-}*/
-
-/*- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    NSLog(@"in touches began************"); //TEST THIS!!!!!
-    UITouch * touch = (UITouch *)[touches anyObject];
-    CGPoint location = [touch locationInView:self.view];
-    
-    if (location.y > 538 && location.x < 80)
-    {
-        showingEdit = TRUE;
-        [self touchesCancelled:touches withEvent:event];
-        NSLog(@"touched google link part*************");
-    }
-    else {
-        NSLog(@"touched somewhere ELSE*************");
-        showingEdit = FALSE;
-        [self touchesEnded:touches withEvent:event];
-    }
-}
-
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    if (!showingEdit) {
-        [self touchesEnded:touches withEvent:event];
-    }
-}*/
-
 - (void)viewDidLoad {
-    
-    /*[[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(applicationWillResign)
-     name:UIApplicationWillResignActiveNotification
-     object:nil];*/
-    
-    //showingEdit = FALSE;
     
     userdefaults = [NSUserDefaults standardUserDefaults];
     
