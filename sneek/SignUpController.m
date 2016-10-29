@@ -223,6 +223,7 @@
     
     userdefaults = [NSUserDefaults standardUserDefaults];
     [userdefaults setInteger:0 forKey:@"matches"];
+    [userdefaults setInteger:0 forKey:@"groupmatches"];
     
 }
 
@@ -245,16 +246,20 @@
         return;
     }
     [user setObject:@"0" forKey:@"matches"];
-    
-    [userdefaults setObject:@"old" forKey:@"new"]; 
+    [user setObject:@"0" forKey:@"groupmatches"];
     
     [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (!error) {
+            
+            /*********CHANGE BACK NEW TO OLD TO NEW*****************/
+            /*********CHANGE BACK NEW TO OLD TO NEW*****************/
+            /*********CHANGE BACK NEW TO OLD TO NEW*****************/
             [userdefaults setObject:user.username forKey:@"pfuser"];
-            [userdefaults setObject:@"new" forKey:@"new"];
+            [userdefaults setObject:@"old"/*@"new"*/ forKey:@"new"];
             [userdefaults setObject:user.password forKey:@"pfpass"];
             [userdefaults setObject:user.email forKey:@"pfemail"];
             [userdefaults setInteger:0 forKey:@"count"];
+            [userdefaults setInteger:0 forKey:@"groupcount"];
             [userdefaults synchronize];
 
             [self dismissViewControllerAnimated:YES completion:nil];

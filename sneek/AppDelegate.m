@@ -130,7 +130,7 @@
         
         PFGeoPoint *userGeoPoint = [PFGeoPoint geoPointWithLatitude:location.coordinate.latitude longitude:location.coordinate.longitude];
         PFQuery *querygeo = [PFQuery queryWithClassName:@"MapPoints"];
-        [querygeo whereKey:@"location" nearGeoPoint:userGeoPoint withinMiles:0.155343];
+        [querygeo whereKey:@"location" nearGeoPoint:userGeoPoint withinMiles:0.05681818];
         querygeo.limit = 10;
         
         [querygeo findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {

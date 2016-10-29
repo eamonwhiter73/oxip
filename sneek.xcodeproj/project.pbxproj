@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DD06211C1DC38E7400119D99 /* GroupController.m in Sources */ = {isa = PBXBuildFile; fileRef = DD06211B1DC38E7400119D99 /* GroupController.m */; };
 		DD08D70C1D8495B2002D9D11 /* RespTutorial.m in Sources */ = {isa = PBXBuildFile; fileRef = DD08D70B1D8495B2002D9D11 /* RespTutorial.m */; };
 		DD1F1CB41D6647FF00D55484 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DD1F1CB31D6647FF00D55484 /* main.m */; };
 		DD3000FD1C067A95002E43C1 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DD3000FC1C067A95002E43C1 /* AppDelegate.m */; };
@@ -73,6 +74,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		DD06211A1DC38E7400119D99 /* GroupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupController.h; sourceTree = "<group>"; };
+		DD06211B1DC38E7400119D99 /* GroupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupController.m; sourceTree = "<group>"; };
 		DD08D70A1D8495A5002D9D11 /* RespTutorial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RespTutorial.h; sourceTree = "<group>"; };
 		DD08D70B1D8495B2002D9D11 /* RespTutorial.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RespTutorial.m; sourceTree = "<group>"; };
 		DD1F1CB31D6647FF00D55484 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = main.m; path = sneek/main.m; sourceTree = "<group>"; };
@@ -274,6 +277,8 @@
 				DD08D70B1D8495B2002D9D11 /* RespTutorial.m */,
 				DD78FDD41DC2E8E9000BEA93 /* InvisibleButtonView.m */,
 				DD78FDD31DC2E74D000BEA93 /* InvisibleButtonView.h */,
+				DD06211A1DC38E7400119D99 /* GroupController.h */,
+				DD06211B1DC38E7400119D99 /* GroupController.m */,
 			);
 			path = sneek;
 			sourceTree = "<group>";
@@ -477,6 +482,7 @@
 				DDA63C051D63BC5C00A9E878 /* AFHTTPSessionManager.m in Sources */,
 				DDA63C081D63BC5C00A9E878 /* AFURLRequestSerialization.m in Sources */,
 				DD08D70C1D8495B2002D9D11 /* RespTutorial.m in Sources */,
+				DD06211C1DC38E7400119D99 /* GroupController.m in Sources */,
 				DDA63C0A1D63BC5C00A9E878 /* AFURLSessionManager.m in Sources */,
 				DDA63C061D63BC5C00A9E878 /* AFNetworkReachabilityManager.m in Sources */,
 			);
