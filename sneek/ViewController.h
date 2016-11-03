@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "AFHTTPSessionManager.h"
+@import MapKit;
 @import GoogleMaps;
 
 @interface ViewController : UIViewController <GMSMapViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
@@ -22,6 +23,7 @@
 - (NSString *)randomStringWithLength:(int)len;
 - (void)dropSneek;
 - (void)openCamera;
+/*- (BOOL)registerRegionWithCircularOverlay:(MKCircle*)overlay andIdentifier:(NSString*)identifier;*/
 
 #endif
 

@@ -255,7 +255,7 @@
             /*********CHANGE BACK NEW TO OLD TO NEW*****************/
             /*********CHANGE BACK NEW TO OLD TO NEW*****************/
             [userdefaults setObject:user.username forKey:@"pfuser"];
-            [userdefaults setObject:@"old"/*@"new"*/ forKey:@"new"];
+            [userdefaults setObject:@"new" forKey:@"new"];
             [userdefaults setObject:user.password forKey:@"pfpass"];
             [userdefaults setObject:user.email forKey:@"pfemail"];
             [userdefaults setInteger:0 forKey:@"count"];

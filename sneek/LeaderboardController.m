@@ -13,7 +13,8 @@
     NSMutableArray *tableData;
     NSMutableArray *matchesForUser;
     NSMutableArray *entries;
-    NSArray *transfer;
+    NSArray *transfer1;
+    NSArray *transfer2;
     int countUsers;
     NSArray *sortedFirstArray;
     NSArray *sortedSecondArray;
@@ -23,6 +24,7 @@
     UILabel *username;
     UILabel *matches;
     UIView *tableHolder;
+    NSUserDefaults *userdefaults;
 }
 @end
 
@@ -30,13 +32,16 @@
 @implementation LeaderboardController {}
 
 - (void)viewDidLoad {
+    
+    userdefaults = [NSUserDefaults standardUserDefaults];
 
     [self.view setBackgroundColor:[UIColor colorWithRed:156.0f/255.0f green:214.0f/255.0f blue:215.0f/255.0f alpha:1.0f]];
     tableData = [[NSMutableArray alloc] init];
     matchesForUser = [[NSMutableArray alloc] init];
     sortedFirstArray = [[NSArray alloc] init];
     sortedSecondArray = [[NSArray alloc] init];
-    
+    transfer2 = [[NSArray alloc] init];
+    transfer1 = [[NSArray alloc] init];
     NSNumber *screenWidth = @([UIScreen mainScreen].bounds.size.width);
     CGRect tablehold = CGRectZero;
     CGRect tableviewhold = CGRectZero;
@@ -61,6 +66,7 @@
         tableviewscore = CGRectMake(240, 0, 60, 368);
         leaderboardtitrect = CGRectMake(0, 20, 320, 60);
         userrect = CGRectMake(10, 90, 140, 20);
+        username.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:14.0];
         matchesrect = CGRectMake(170, 90, 140, 20);
         matches.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:14.0];
         backtomaprect = CGRectMake(10, 498, 300, 60);
@@ -179,34 +185,127 @@
     [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"SimpleTableItem"];
     [_tableViewScore registerClass:[UITableViewCell class] forCellReuseIdentifier:@"SimpleTableItem"];
     
-    PFQuery *query = [PFQuery queryWithClassName:@"_User"];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
+    //MAYBE CHANGE IF STATEMENTS INSIDE???????
+    
+    if(![userdefaults objectForKey:@"idbyuser"]) {
+        PFQuery *query = [PFQuery queryWithClassName:@"_User"];
+        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (!error) {
+                    entries = [NSMutableArray new];
+                    for (PFObject *object in objects) {
+                        [tableData addObject:[object valueForKey:@"username"]];
+                        [matchesForUser addObject:[object valueForKey:@"matches"]];
+                        
+                        NSMutableDictionary* entry = [NSMutableDictionary new];
+                        
+                        entry[@"username"] = [object valueForKey:@"username"];
+                        entry[@"matches"] = [object valueForKey:@"matches"];
+                        
+                        [entries addObject:entry];
+                    }
+                    
+                    NSSortDescriptor * descriptor = [[NSSortDescriptor alloc] initWithKey:@"matches" ascending:NO selector:@selector(localizedStandardCompare:)];
+                    NSArray *entrieshold = [entries sortedArrayUsingDescriptors:@[descriptor]];
+                    transfer1 = [entrieshold copy];
+
+                    [_tableView reloadData];
+                    [_tableViewScore reloadData];
+                    
+                }else{
+                    NSLog(@"%@", [error description]);
+                }
+            });
+        }];
+    }
+    else {
+        
+        /*PFQuery *query2 = [PFQuery queryWithClassName:@"GroupGame"];
+        [query2 whereKey:@"idbyuser" equalTo:[userdefaults objectForKey:@"idbyuser"]];
+        [query2 findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error) {
                 entries = [NSMutableArray new];
-                for (PFObject *object in objects) {
-                    [tableData addObject:[object valueForKey:@"username"]];
-                    [matchesForUser addObject:[object valueForKey:@"matches"]];
+                
+                    NSArray *items = [[objects firstObject] componentsSeparatedByString:@","];
+                    NSMutableArray *muty = [[NSMutableArray alloc] initWithArray:items];
+                    [muty removeLastObject];
+                    items = [[NSArray alloc] initWithArray:muty];
                     
-                    NSMutableDictionary* entry = [NSMutableDictionary new];
+                    for(NSString* item in items) {
+                        
+                        NSLog(@"888888888%@888888888", item);
+
+                        [tableData addObject:item];
+                        
+                        [matchesForUser addObject:[[objects firstObject] objectForKey:@"usersAndPoints"]];
                     
-                    entry[@"username"] = [object valueForKey:@"username"];
-                    entry[@"matches"] = [object valueForKey:@"matches"];
-                    
-                    [entries addObject:entry];
-                }
+                        NSMutableDictionary* entry = [NSMutableDictionary new];
+                        entry[@"username"] = [[objects firstObject] valueForKey:@"username"];
+                        entry[@"matches"] = [[objects firstObject] valueForKey:@"groupmatches"];
+                        
+                        NSLog(@"%@ entry description ***(*", [[objects firstObject] valueForKey:@"groupmatches"]);
+                        
+                    }
+                
                 NSSortDescriptor * descriptor = [[NSSortDescriptor alloc] initWithKey:@"matches" ascending:NO selector:@selector(localizedStandardCompare:)];
+                NSLog(@"%@ entries", [entries description]);
+
                 NSArray *entrieshold = [entries sortedArrayUsingDescriptors:@[descriptor]];
                 transfer = [entrieshold copy];
-
+                
                 [_tableView reloadData];
                 [_tableViewScore reloadData];
+
+            } else {
+                // Log details of the fail
+                NSLog(@"Error: %@ %@", error, [error userInfo]);
+            }
+        }];*/
+        
+        PFQuery *query2 = [PFQuery queryWithClassName:@"GroupGame"];
+        [query2 whereKey:@"idbyuser" equalTo:[userdefaults objectForKey:@"idbyuser"]];
+        [query2 findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if (!error) {
+                entries = [NSMutableArray new];
+                // The find succeeded.
+                NSLog(@"Successfully retrieved %lu scores. YOU YOU YOU &&&***&&&&****&&&&&", (unsigned long)objects.count);
+                // Do something with the found objects
+                for (PFObject *object in objects) {
+                    NSMutableDictionary *yy = [[NSMutableDictionary alloc] initWithDictionary:[object objectForKey:@"usersAndPoints"]];
+                    NSLog(@"%@ ****&&&666%%%%66^^^^^^^&&*****", [object description]);
+                    
+                    NSArray *keyArray = [yy allKeys];
+                    for(NSString *keyd in keyArray) {
+                        [tableData addObject:keyd];
+                        NSMutableArray *locs = [[NSMutableArray alloc] initWithArray:[yy objectForKey:keyd]];
+                        for(NSDictionary *outterar in locs) {
+                            NSLog(@"%@", [outterar description]);
+                            [matchesForUser addObject:[outterar objectForKey:@"groupmatches"]];
+                            
+                            NSMutableDictionary* entry = [NSMutableDictionary new];
+                            entry[@"username"] = keyd;
+                            entry[@"matches"] = [outterar valueForKey:@"groupmatches"];
+                            
+                            [entries addObject:entry];
+                        }
+                    }
+                }
                 
-            }else{
+                NSSortDescriptor * descriptor = [[NSSortDescriptor alloc] initWithKey:@"matches" ascending:NO selector:@selector(localizedStandardCompare:)];
+                NSArray *entrieshold = [entries sortedArrayUsingDescriptors:@[descriptor]];
+                transfer2 = [entrieshold copy];
+                //NSMutableArray *transfer3 = [[NSMutableArray alloc] initWithArray:transfer2];
+                //[transfer3 removeLastObject];
+                //transfer2 = [transfer3 copy];
+                
+                [_tableView reloadData];
+                [_tableViewScore reloadData];
+            }
+            else {
                 NSLog(@"%@", [error description]);
             }
-        });
-    }];
+        }];
+    }
     
     [backToMap setFrame:backtomaprect];
     backToMap.backgroundColor = [UIColor colorWithRed:218.0f/255.0f green:247.0f/255.0f blue:220.0f/255.0f alpha:1.0f];
@@ -262,8 +361,21 @@
         contentV.backgroundColor = [UIColor colorWithRed:156.0f/255.0f green:214.0f/255.0f blue:215.0f/255.0f alpha:1.0f];
 
         cell.contentView.layoutMargins = UIEdgeInsetsZero;
-
-        NSString *username2 = [[transfer objectAtIndex:indexPath.row] valueForKey:@"username"];
+        
+        NSString *username2;
+        
+        if(![userdefaults objectForKey:@"idbyuser"]) {
+            //NSDictionary* storeg = [transfer valueForKey:@"username"];
+            username2 = [[NSString alloc] initWithString:[[transfer1 objectAtIndex:indexPath.row] valueForKey:@"username"]];//[[NSString alloc] initWithString:[storeg objectForKey:@"username"]];
+        }
+        else {
+            NSLog(@"%ld", (long)indexPath.row);
+            if(indexPath.row < [transfer2 count]) {
+                NSLog(@"%@", [[NSString alloc] initWithString:[[transfer2 objectAtIndex:indexPath.row] valueForKey:@"matches"]]);
+                
+                username2 = [[NSString alloc] initWithString:[[transfer2 objectAtIndex:indexPath.row] valueForKey:@"username"]];
+            }
+        }
         
         contentV.text = username2;
         [cell.contentView addSubview:contentV];
@@ -286,10 +398,33 @@
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:simpleTableIdentifier];
         }
         
-        NSString *matchAmount = [[transfer objectAtIndex:indexPath.row] valueForKey:@"matches"];
+        NSString* matches2;
+        if(![userdefaults objectForKey:@"idbyuser"]) {
+            //NSDictionary* storeg = [transfer valueForKey:@"username"];
+            matches2 = [[NSString alloc] initWithString:[[transfer1 objectAtIndex:indexPath.row] valueForKey:@"matches"]];//[[NSString alloc] initWithString:[storeg objectForKey:@"username"]];
+        }
+        else {
+            NSLog(@"%ld", (long)indexPath.row);
+            if(indexPath.row < [transfer2 count]) {
+                NSLog(@"%@", [[NSString alloc] initWithString:[[transfer2 objectAtIndex:indexPath.row] valueForKey:@"matches"]]);
+                
+                matches2 = [[NSString alloc] initWithString:[[transfer2 objectAtIndex:indexPath.row] valueForKey:@"matches"]];
+                
+                if([[[transfer2 objectAtIndex:indexPath.row] valueForKey:@"matches"] isKindOfClass:[NSString class]]) {
+                    NSLog(@"its a string");
+                }
+            }
+        }
         
-        cell.textLabel.text = matchAmount;
-        
+        /*if(![userdefaults objectForKey:@"idbyuser"]) {
+            NSDictionary* tempdic = [transfer1 objectAtIndex:indexPath.row];
+        }
+        else {
+            NSDictionary* tempdic = [[NSDictionary alloc] initWithObjectsAndKeys:[transfer2 valueForKey:<#(nonnull NSString *)#>], ..., nil     cell.textLabel.text = [tempdic objectForKey:@"matches"];
+        }*/
+                                     
+        cell.textLabel.text = matches2;
+                                     
         return cell;
     }
 }

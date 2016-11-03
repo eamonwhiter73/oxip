@@ -16,10 +16,58 @@
 #import "AppDelegate.h"
 #import "InvisibleButtonView.h"
 #import "GroupController.h"
+#import "AppDelegate.h"
+#import <CoreMotion/CoreMotion.h>
+
 
 @import GoogleMaps;
 
 typedef void (^CompletionHandlerType)();
+
+@interface MotionHandler : NSObject
+
+@end
+
+@implementation MotionHandler {
+@private
+    // this is a private variable for this class that is not visible outside
+    // (also, iOS handles memory and access management of these faster than properties)
+    CMMotionActivityManager *_motionActivityManager;
+}
+
+// initialization method, you can do other stuff here too
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        // check to see if the device can handle motion activity
+        if ([CMMotionActivityManager isActivityAvailable]) {
+            // if so, initialize the activity manager
+            _motionActivityManager = [[CMMotionActivityManager alloc] init];
+        }
+    }
+    return self;
+}
+
+- (void)startMotionActivityMonitoring {
+    // create the motion activity handler
+    CMMotionActivityHandler motionActivityHandler = ^(CMMotionActivity *activity) {
+        if(activity.automotive) {
+            [[(AppDelegate*)[[UIApplication sharedApplication] delegate] locationMgr] stopMonitoringSignificantLocationChanges];
+        }
+        else {
+            [[(AppDelegate*)[[UIApplication sharedApplication] delegate] locationMgr] startMonitoringSignificantLocationChanges];
+        }
+    };
+    
+    // check to see if the motion activity manager exists
+    if (_motionActivityManager) {
+        // if so, start monitoring activity
+        // notice that we add updates to the mainQueue. This will call your handler on the main thread
+        [_motionActivityManager startActivityUpdatesToQueue:[NSOperationQueue mainQueue] withHandler:motionActivityHandler];
+    }
+}
+
+@end
 
 @interface ViewController () {
     GMSMapView *_mapView_;
@@ -69,7 +117,11 @@ typedef void (^CompletionHandlerType)();
 @implementation ViewController {}
 
 - (void)viewDidLoad {
-
+    
+    //ADD ONCE FIGURED OUT PHANTOM PIX
+    /*MotionHandler* motion = [[MotionHandler alloc] init];
+    [motion startMotionActivityMonitoring];*/
+    
     userdefaults = [NSUserDefaults standardUserDefaults];
     
     NSNumber *screenWidth = @([UIScreen mainScreen].bounds.size.width);
@@ -93,6 +145,14 @@ typedef void (^CompletionHandlerType)();
     self.view = _mapView_;
     
     _mapView_.delegate = self;
+    
+    [self centerloc];
+    
+    //remove**************//*****//------===
+    
+    [userdefaults setObject:@"old" forKey:@"new"];
+    [userdefaults synchronize];
+    //remove**************//*****//------===
     
     [[PFInstallation currentInstallation] setObject:[PFUser currentUser] forKey:@"user"];
     [[PFInstallation currentInstallation] saveEventually];
@@ -140,6 +200,8 @@ typedef void (^CompletionHandlerType)();
             PFQuery *query = [PFQuery queryWithClassName:@"MapPoints"];
             [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
                 if (!error) {
+                    [groupGame setHidden:NO];
+                    [markershow setHidden:YES];
                     for (PFObject *object in objects) {
                         PFGeoPoint *point = [object objectForKey:@"location"];
                         
@@ -149,6 +211,10 @@ typedef void (^CompletionHandlerType)();
                         initMarker.icon = [UIImage imageNamed:@"marker"];
                         initMarker.userData = @{@"marker_id":[object objectForKey:@"marker_id"]};
                         initMarker.map = _mapView_;
+                        
+                        /*CLLocationCoordinate2D circleCenter = CLLocationCoordinate2DMake(point.latitude, point.longitude);
+                        MKCircle *circ = [MKCircle circleWithCenterCoordinate:circleCenter radius:91.44];
+                        [self registerRegionWithCircularOverlay:circ andIdentifier:[object objectForKey:@"marker_id"]];*/
                     }
                 }else{
                     NSLog(@"%@", [error description]);
@@ -160,6 +226,8 @@ typedef void (^CompletionHandlerType)();
             [query2 whereKey:@"idbyuser" equalTo:[userdefaults objectForKey:@"idbyuser"]];
             [query2 findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
                 if (!error) {
+                    [groupGame setHidden:YES];
+                    [markershow setHidden:NO];
                     // The find succeeded.
                     NSLog(@"Successfully retrieved %lu scores.", (unsigned long)objects.count);
                     // Do something with the found objects
@@ -172,22 +240,44 @@ typedef void (^CompletionHandlerType)();
                         for(NSString *keyd in keyArray) {
                             NSMutableArray *locs = [[NSMutableArray alloc] initWithArray:[yy objectForKey:keyd]];
                             for(NSDictionary *outterar in locs) {
-                                PFGeoPoint *here = [outterar objectForKey:@"pointdat"];
-                                GMSMarker *initMarker = [GMSMarker markerWithPosition:CLLocationCoordinate2DMake(here.latitude, here.longitude)];
-                                initMarker.title = keyd;
-                                initMarker.appearAnimation = kGMSMarkerAnimationPop;
-                                initMarker.icon = [UIImage imageNamed:@"marker"];
-                                initMarker.userData = @{@"marker_id":[outterar objectForKey:@"marker_id"]};
-                                initMarker.map = _mapView_;
+                                if(!([outterar valueForKey:@"hideit"] == [NSNumber numberWithInt:1])) {
+                                    PFGeoPoint *here = [outterar objectForKey:@"pointdat"];
+                                    GMSMarker *initMarker = [GMSMarker markerWithPosition:CLLocationCoordinate2DMake(here.latitude, here.longitude)];
+                                    initMarker.title = keyd;
+                                    initMarker.appearAnimation = kGMSMarkerAnimationPop;
+                                    initMarker.icon = [UIImage imageNamed:@"marker"];
+                                    initMarker.userData = @{@"marker_id":[outterar objectForKey:@"marker_id"]};
+                                    initMarker.map = _mapView_;
+                                    
+                                    /*CLLocationCoordinate2D circleCenter = CLLocationCoordinate2DMake(here.latitude, here.longitude);
+                                    MKCircle *circ = [MKCircle circleWithCenterCoordinate:circleCenter radius:91.44];
+                                    [self registerRegionWithCircularOverlay:circ andIdentifier:[outterar objectForKey:@"marker_id"]];*/
+                                }
+                                else {
+                                    NSUInteger ind = [locs indexOfObject:outterar];
+                                    [locs removeObjectAtIndex:ind];
+                                    //[outterar setValue:[NSNumber numberWithInt:1] forKey:@"hideit"];
+                                    [yy setObject:locs forKey:keyd];
+                                    [object setObject:yy forKey:@"usersAndPoints"];
+                                    [object saveEventually];
+                                }
                             }
                         }
                     }
                 } else {
-                    // Log details of the failure
+                    // Log details of the failu
                     NSLog(@"Error: %@ %@", error, [error userInfo]);
                 }
             }];
         }
+        
+        /*CLLocationCoordinate2D circleCenter = _mapView_.myLocation.coordinate;
+        CLCircularRegion *geoRegion = [[CLCircularRegion alloc]
+                                       initWithCenter:circleCenter
+                                       radius:91.44
+                                       identifier:@"uniqueid"];
+        
+        [[(AppDelegate *)[[UIApplication sharedApplication] delegate] locationMgr] requestStateForRegion:geoRegion];*/
     }
     
     UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
@@ -277,6 +367,11 @@ typedef void (^CompletionHandlerType)();
         [notclose setFrame:CGRectMake(10, 547, 355, 92)];
         notclose.layer.cornerRadius = 10.0;
         [notclose setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:14.0]];
+        groupGame = [[UIButton alloc] initWithFrame:CGRectMake(325.5, 32, 37.5, 37.5)];
+        groupGame.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:8.0];
+        markershow = [[UIButton alloc] initWithFrame:CGRectMake(12, 32, 37.5, 37.5)];
+        markershow.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:9.0];
+
     }
     if([screenWidth intValue] == 414) {
         invisible = [[InvisibleButtonView alloc] initWithFrame:CGRectMake(0, 706, 80, 30)];
@@ -307,6 +402,10 @@ typedef void (^CompletionHandlerType)();
         [notclose setFrame:CGRectMake(10, 584, 392, 142)];
         notclose.layer.cornerRadius = 10.0;
         [notclose setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:14.0]];
+        groupGame = [[UIButton alloc] initWithFrame:CGRectMake(364.5, 32, 37.5, 37.5)];
+        groupGame.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:8.0];
+        markershow = [[UIButton alloc] initWithFrame:CGRectMake(12, 32, 37.5, 37.5)];
+        markershow.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:9.0];
     }
     if([screenWidth intValue] == 768) {
         invisible = [[InvisibleButtonView alloc] initWithFrame:CGRectMake(0, 994, 80, 30)];
@@ -338,6 +437,10 @@ typedef void (^CompletionHandlerType)();
         [notclose setFrame:CGRectMake(20, 840, 727, 141)];
         notclose.layer.cornerRadius = 7.5;
         [notclose setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:14.0]];
+        groupGame = [[UIButton alloc] initWithFrame:CGRectMake(669, 44, 75, 75)];
+        groupGame.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:16.0];
+        markershow = [[UIButton alloc] initWithFrame:CGRectMake(24, 44, 75, 75)];
+        markershow.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:18.0];
     }
     if([screenWidth intValue] == 1024) {
         invisible = [[InvisibleButtonView alloc] initWithFrame:CGRectMake(0, 1336, 80, 30)];
@@ -369,6 +472,10 @@ typedef void (^CompletionHandlerType)();
         [notclose setFrame:CGRectMake(27, 1096, 969, 230)];
         notclose.layer.cornerRadius = 5.0;
         [notclose setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:28.0]];
+        groupGame = [[UIButton alloc] initWithFrame:CGRectMake(875.5, 56, 112.5, 112.5)];
+        groupGame.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:24.0];
+        markershow = [[UIButton alloc] initWithFrame:CGRectMake(36, 56, 112.5, 112.5)];
+        markershow.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:27.0];
     }
     
     [self.view addSubview:invisible];
@@ -495,11 +602,79 @@ typedef void (^CompletionHandlerType)();
     }
 }
 
+/*- (BOOL)registerRegionWithCircularOverlay:(MKCircle*)overlay andIdentifier:(NSString*)identifier {
+    
+    NSLog(@"in ****** registerregion ******* !!!!!!");
+    // Check the authorization status
+    if (([CLLocationManager authorizationStatus] != UNAuthorizationStatusAuthorized) &&
+        ([CLLocationManager authorizationStatus] != UNAuthorizationStatusNotDetermined))
+            [[(AppDelegate *)[[UIApplication sharedApplication] delegate] locationMgr] requestAlwaysAuthorization];
+    
+    // Clear out any old regions to prevent buildup.
+    if ([[[(AppDelegate *)[[UIApplication sharedApplication] delegate] locationMgr]  monitoredRegions] count] > 0) {
+        for (id obj in [[(AppDelegate *)[[UIApplication sharedApplication] delegate] locationMgr]  monitoredRegions]) {
+            
+            [[(AppDelegate *)[[UIApplication sharedApplication] delegate] locationMgr] stopMonitoringForRegion:obj];
+        }
+    }
+    
+    // If the overlay's radius is too large, registration fails automatically,
+    // so clamp the radius to the max value.
+    CLLocationDistance radius = overlay.radius;
+    if (radius > [[(AppDelegate *)[[UIApplication sharedApplication] delegate] locationMgr] maximumRegionMonitoringDistance]) {
+        radius = [[(AppDelegate *)[[UIApplication sharedApplication] delegate] locationMgr] maximumRegionMonitoringDistance];
+    }
+    
+    // Create the geographic region to be monitored.
+    CLCircularRegion *geoRegion = [[CLCircularRegion alloc]
+                                   initWithCenter:overlay.coordinate
+                                   radius:radius
+                                   identifier:identifier];
+    [[(AppDelegate *)[[UIApplication sharedApplication] delegate] locationMgr] startMonitoringForRegion:geoRegion];
+    
+    return YES;
+}*/
+
+/*- (void)locationManager:(CLLocationManager *)manager
+         didEnterRegion:(CLRegion *)region {
+    
+    NSLog(@"did enter region in view controller*************");
+    
+    if(![userdefaults objectForKey:@"idbyuser"]) {
+        PFQuery *sosQuery = [PFUser query];
+        [sosQuery whereKey:@"username" equalTo:[userdefaults objectForKey:@"pfuser"]];
+        sosQuery.limit = 1;
+        
+        NSLog(@"entered and sent push************");
+        
+        [sosQuery getFirstObjectInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+            [PFCloud callFunctionInBackground:@"sendpushnear"
+                               withParameters:@{@"user":(PFUser *)object.objectId, @"username":[userdefaults objectForKey:@"pfuser"]}];
+        }];
+    }
+    else {
+        PFQuery *sosQuery = [PFUser query];
+        [sosQuery whereKey:@"username" equalTo:[userdefaults objectForKey:@"pfuser"]];
+        sosQuery.limit = 1;
+        
+        NSLog(@"entered and sent push for group************");
+        
+        [sosQuery getFirstObjectInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+            [PFCloud callFunctionInBackground:@"sendpushneargroup"
+                               withParameters:@{@"user":(PFUser *)object.objectId, @"username":[userdefaults objectForKey:@"pfuser"]}];
+        }];
+    }
+}*/
+
 - (void)group {
     if(![userdefaults objectForKey:@"lastidbyuser"]) {
         [self presentViewController:groupcontroller animated:YES completion:nil];
+        [groupGame setHidden:YES];
+        [markershow setHidden:NO];
     }
     else {
+        [groupGame setHidden:YES];
+        [markershow setHidden:NO];
         [_mapView_ clear];
         
         [userdefaults setObject:[userdefaults objectForKey:@"lastidbyuser"] forKey:@"idbyuser"];
@@ -524,13 +699,27 @@ typedef void (^CompletionHandlerType)();
                     for(NSString *keyd in keyArray) {
                         NSMutableArray *locs = [[NSMutableArray alloc] initWithArray:[yy objectForKey:keyd]];
                         for(NSDictionary *outterar in locs) {
-                            PFGeoPoint *here = [outterar objectForKey:@"pointdat"];
-                            GMSMarker *initMarker = [GMSMarker markerWithPosition:CLLocationCoordinate2DMake(here.latitude, here.longitude)];
-                            initMarker.title = keyd;
-                            initMarker.appearAnimation = kGMSMarkerAnimationPop;
-                            initMarker.icon = [UIImage imageNamed:@"marker"];
-                            initMarker.userData = @{@"marker_id":[outterar objectForKey:@"marker_id"]};
-                            initMarker.map = _mapView_;
+                            if(!([outterar valueForKey:@"hideit"] == [NSNumber numberWithInt:1])) {
+                                PFGeoPoint *here = [outterar objectForKey:@"pointdat"];
+                                GMSMarker *initMarker = [GMSMarker markerWithPosition:CLLocationCoordinate2DMake(here.latitude, here.longitude)];
+                                initMarker.title = keyd;
+                                initMarker.appearAnimation = kGMSMarkerAnimationPop;
+                                initMarker.icon = [UIImage imageNamed:@"marker"];
+                                initMarker.userData = @{@"marker_id":[outterar objectForKey:@"marker_id"]};
+                                initMarker.map = _mapView_;
+                                
+                                /*CLLocationCoordinate2D circleCenter = CLLocationCoordinate2DMake(here.latitude, here.longitude);
+                                 MKCircle *circ = [MKCircle circleWithCenterCoordinate:circleCenter radius:91.44];
+                                 [self registerRegionWithCircularOverlay:circ andIdentifier:[outterar objectForKey:@"marker_id"]];*/
+                            }
+                            else {
+                                NSUInteger ind = [locs indexOfObject:outterar];
+                                [locs removeObjectAtIndex:ind];
+                                //[outterar setValue:[NSNumber numberWithInt:1] forKey:@"hideit"];
+                                [yy setObject:locs forKey:keyd];
+                                [object setObject:yy forKey:@"usersAndPoints"];
+                                [object saveEventually];
+                            }
                         }
                     }
                 }
@@ -543,6 +732,8 @@ typedef void (^CompletionHandlerType)();
 }
 
 - (void)showallmarkers {
+    [groupGame setHidden:NO];
+    [markershow setHidden:YES];
     
     [userdefaults setObject:[userdefaults objectForKey:@"idbyuser"] forKey:@"lastidbyuser"];
     [userdefaults setObject:NULL forKey:@"idbyuser"];
@@ -566,6 +757,10 @@ typedef void (^CompletionHandlerType)();
                 initMarker.icon = [UIImage imageNamed:@"marker"];
                 initMarker.userData = @{@"marker_id":[object objectForKey:@"marker_id"]};
                 initMarker.map = _mapView_;
+                
+                /*CLLocationCoordinate2D circleCenter = CLLocationCoordinate2DMake(point.latitude, point.longitude);
+                MKCircle *circ = [MKCircle circleWithCenterCoordinate:circleCenter radius:91.44];
+                [self registerRegionWithCircularOverlay:circ andIdentifier:[object objectForKey:@"marker_id"]];*/
             }
         }else{
             NSLog(@"%@", [error description]);
@@ -855,6 +1050,7 @@ typedef void (^CompletionHandlerType)();
                                                 [xButton setHidden:NO];
                                                 [infobut setHidden:YES];
                                                 [reportButton setHidden:NO];
+                                                [notclose setHidden: YES]; /***ADDED PROBLEM MAYBE***/
                                             });
                                             
                                             if([[[NSString alloc] initWithString:[userdefaults objectForKey:@"new"]] isEqualToString:@"new"]) {
@@ -889,96 +1085,95 @@ typedef void (^CompletionHandlerType)();
                                     }
                                 }
                             }
-                        }
-                        
-                        if(gotahit == 0) {
+                            else {
                             
-                            NSLog(@"*********GOTAHIT = 0*************");
-                            
-                            PFQuery *query2 = [PFQuery queryWithClassName:@"GroupGame"];
-                            [query2 whereKey:@"idbyuser" equalTo:[userdefaults objectForKey:@"idbyuser"]];
-                            [query2 findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-                                if (!error) {
-                                    // The find succeeded.
-                                    NSLog(@"Successfully retrieved %lu scores.", (unsigned long)objects.count);
-                                    // Do something with the found objects
-                                    for (PFObject *object in objects) {
-                                        NSMutableDictionary *yy = [[NSMutableDictionary alloc] initWithDictionary:[object objectForKey:@"usersAndPoints"]];
-                                        NSLog(@"%@", [yy description]);
-                                        
-                                        NSArray *keyArray = [yy allKeys];
-                                        
-                                        for(NSString *keyd in keyArray) {
-                                            NSMutableArray *locs = [[NSMutableArray alloc] initWithArray:[yy objectForKey:keyd]];
-                                            for(NSDictionary *outterar in locs) {
-                                                
-                                                deleteObjectIdForGroup = [outterar objectForKey:@"marker_id"];
-                                                
-                                                if([[outterar valueForKey:@"title"] isEqualToString:marker.title] && [[[NSString alloc] initWithFormat:@"%@", [marker.userData objectForKey:@"marker_id"]] isEqualToString:[[NSString alloc] initWithFormat:@"%@", [outterar objectForKey:@"marker_id"]]]) {
+                                NSLog(@"*********GOTAHIT = 0*************");
+                                
+                                PFQuery *query2 = [PFQuery queryWithClassName:@"GroupGame"];
+                                [query2 whereKey:@"idbyuser" equalTo:[userdefaults objectForKey:@"idbyuser"]];
+                                [query2 findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                                    if (!error) {
+                                        // The find succeeded.
+                                        NSLog(@"Successfully retrieved %lu scores.", (unsigned long)objects.count);
+                                        // Do something with the found objects
+                                        for (PFObject *object in objects) {
+                                            NSMutableDictionary *yy = [[NSMutableDictionary alloc] initWithDictionary:[object objectForKey:@"usersAndPoints"]];
+                                            NSLog(@"%@", [yy description]);
+                                            
+                                            NSArray *keyArray = [yy allKeys];
+                                            
+                                            for(NSString *keyd in keyArray) {
+                                                NSMutableArray *locs = [[NSMutableArray alloc] initWithArray:[yy objectForKey:keyd]];
+                                                for(NSDictionary *outterar in locs) {
                                                     
-                                                    staticObjectId = [outterar valueForKey:@"marker_id"];
-                                                    staticCount = [outterar valueForKey:@"count"];
+                                                    deleteObjectIdForGroup = [outterar objectForKey:@"marker_id"];
                                                     
-                                                    //for (PFObject *object in outterar) {
-                                                    //if([[outterar valueForKey:@"marker_id"] isEqualToString:staticObjectId]) {
-                                                    newtitle = [outterar valueForKey:@"title"];
-                                                    //}
-                                                    //}
-                                                    
-                                                    _manager = [AFHTTPSessionManager manager];
-                                                    _manager.responseSerializer=[AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingAllowFragments];
-                                                    _manager.responseSerializer.acceptableContentTypes = [_manager.responseSerializer.acceptableContentTypes setByAddingObject:@"text/html"];
-                                                    _manager.responseSerializer.acceptableContentTypes = [_manager.responseSerializer.acceptableContentTypes setByAddingObject:@"text/plain"];
-                                                    
-                                                    NSString *usernameEncoded = marker.title;
-                                                    
-                                                    NSDictionary *params = @{@"username": usernameEncoded, @"count": [outterar valueForKey:@"count"]};
-                                                    
-                                                    [indicator startAnimating];
-                                                    
-                                                    [_manager POST:@"http://www.eamondev.com/sneekback/getimage.php" parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                                                    if([[outterar valueForKey:@"title"] isEqualToString:marker.title] && [[[NSString alloc] initWithFormat:@"%@", [marker.userData objectForKey:@"marker_id"]] isEqualToString:[[NSString alloc] initWithFormat:@"%@", [outterar objectForKey:@"marker_id"]]]) {
                                                         
-                                                        NSData *decodedData = [[NSData alloc] initWithBase64EncodedString:responseObject[@"image"] options:0];
-                                                        image.image = [UIImage imageWithData:decodedData scale:300/2448];
-                                                        dispatch_async(dispatch_get_main_queue(), ^(void){
-                                                            [image setHidden:NO];
-                                                            [respondButton setHidden:YES];
-                                                            [notclose setHidden:NO];
-                                                            [xButton setHidden:NO];
-                                                            [infobut setHidden:YES];
-                                                            [reportButton setHidden:NO];
-                                                        });
+                                                        staticObjectId = [outterar valueForKey:@"marker_id"];
+                                                        staticCount = [outterar valueForKey:@"count"];
                                                         
-                                                        if([[[NSString alloc] initWithString:[userdefaults objectForKey:@"new"]] isEqualToString:@"new"]) {
+                                                        //for (PFObject *object in outterar) {
+                                                        //if([[outterar valueForKey:@"marker_id"] isEqualToString:staticObjectId]) {
+                                                        newtitle = [outterar valueForKey:@"title"];
+                                                        //}
+                                                        //}
+                                                        
+                                                        _manager = [AFHTTPSessionManager manager];
+                                                        _manager.responseSerializer=[AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingAllowFragments];
+                                                        _manager.responseSerializer.acceptableContentTypes = [_manager.responseSerializer.acceptableContentTypes setByAddingObject:@"text/html"];
+                                                        _manager.responseSerializer.acceptableContentTypes = [_manager.responseSerializer.acceptableContentTypes setByAddingObject:@"text/plain"];
+                                                        
+                                                        NSString *usernameEncoded = marker.title;
+                                                        
+                                                        NSDictionary *params = @{@"username": usernameEncoded, @"count": [outterar valueForKey:@"count"]};
+                                                        
+                                                        [indicator startAnimating];
+                                                        
+                                                        [_manager POST:@"http://www.eamondev.com/sneekback/getimage.php" parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                                                            
+                                                            NSData *decodedData = [[NSData alloc] initWithBase64EncodedString:responseObject[@"image"] options:0];
+                                                            image.image = [UIImage imageWithData:decodedData scale:300/2448];
                                                             dispatch_async(dispatch_get_main_queue(), ^(void){
-                                                                [resptute setHidden:NO];
+                                                                [image setHidden:NO];
+                                                                [respondButton setHidden:YES];
+                                                                [notclose setHidden:NO];
+                                                                [xButton setHidden:NO];
+                                                                [infobut setHidden:YES];
+                                                                [reportButton setHidden:NO];
                                                             });
-                                                        }
-                                                        
-                                                        [indicator stopAnimating];
-                                                        
-                                                    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-                                                        
-                                                        NSLog(@"%@ ******** pointy", [error description]);
-
-                                                        deviceNotFoundAlertController = [UIAlertController alertControllerWithTitle:@"HMMM" message:@"Maybe your connection is bad" preferredStyle:UIAlertControllerStyleAlert];
-                                                        
-                                                        [deviceNotFoundAlertController addAction:deviceNotFoundAlert];
-                                                        
-                                                        [self presentViewController:deviceNotFoundAlertController animated:NO completion:NULL];
-                                                        [indicator stopAnimating];
-                                                    }];
+                                                            
+                                                            if([[[NSString alloc] initWithString:[userdefaults objectForKey:@"new"]] isEqualToString:@"new"]) {
+                                                                dispatch_async(dispatch_get_main_queue(), ^(void){
+                                                                    [resptute setHidden:NO];
+                                                                });
+                                                            }
+                                                            
+                                                            [indicator stopAnimating];
+                                                            
+                                                        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                                                            
+                                                            NSLog(@"%@ ******** pointy", [error description]);
+                                                            
+                                                            deviceNotFoundAlertController = [UIAlertController alertControllerWithTitle:@"HMMM" message:@"Maybe your connection is bad" preferredStyle:UIAlertControllerStyleAlert];
+                                                            
+                                                            [deviceNotFoundAlertController addAction:deviceNotFoundAlert];
+                                                            
+                                                            [self presentViewController:deviceNotFoundAlertController animated:NO completion:NULL];
+                                                            [indicator stopAnimating];
+                                                        }];
+                                                    }
                                                 }
                                             }
                                         }
                                     }
-                                }
-                                else{
-                                    deviceNotFoundAlertController = [UIAlertController alertControllerWithTitle:@"ERROR" message:[[NSString alloc] initWithString:[error description]] preferredStyle:UIAlertControllerStyleAlert];
-                                    [deviceNotFoundAlertController addAction:deviceNotFoundAlert];
-                                    [self presentViewController:deviceNotFoundAlertController animated:NO completion:NULL];
-                                }
-                            }];
+                                    else{
+                                        deviceNotFoundAlertController = [UIAlertController alertControllerWithTitle:@"ERROR" message:[[NSString alloc] initWithString:[error description]] preferredStyle:UIAlertControllerStyleAlert];
+                                        [deviceNotFoundAlertController addAction:deviceNotFoundAlert];
+                                        [self presentViewController:deviceNotFoundAlertController animated:NO completion:NULL];
+                                    }
+                                }];
+                            }
                         }
                     }
                 }
@@ -988,10 +1183,6 @@ typedef void (^CompletionHandlerType)();
             }
         }];
     }
-}
-
-- (void)delayForDissapear:(UILabel*)label {
-    [label removeFromSuperview];
 }
 
 - (void)dealloc {
@@ -1146,15 +1337,6 @@ typedef void (^CompletionHandlerType)();
         
         NSString *usernameEncoded = [[userdefaults objectForKey:@"pfuser"] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
         
-        NSDictionary *params = [[NSDictionary alloc] init];
-        if(![userdefaults objectForKey:@"idbyuser"]) {
-            params = @{@"username": usernameEncoded, @"count": [userdefaults valueForKey:@"count"]};
-        }
-        else {
-            NSLog(@"groupcount: %@", [userdefaults valueForKey:@"groupcount"]);
-            params = @{@"username": usernameEncoded, @"groupcount": [userdefaults valueForKey:@"groupcount"], @"idbyuser":[userdefaults objectForKey:@"idbyuser"]};
-        }
-        
         [pickery dismissViewControllerAnimated:YES completion:NULL];
         
         r = [[NSString alloc] initWithString:[self randomStringWithLength:8]];
@@ -1205,6 +1387,15 @@ typedef void (^CompletionHandlerType)();
                     NSLog(@"Error: %@ %@", error, [error userInfo]);
                 }
             }];
+        }
+        
+        NSDictionary *params = [[NSDictionary alloc] init];
+        if(![userdefaults objectForKey:@"idbyuser"]) {
+            params = @{@"username": usernameEncoded, @"count": [userdefaults valueForKey:@"count"]};
+        }
+        else {
+            NSLog(@"groupcount: %@", [userdefaults valueForKey:@"groupcount"]);
+            params = @{@"username": usernameEncoded, @"groupcount": [userdefaults valueForKey:@"groupcount"], @"idbyuser":[userdefaults objectForKey:@"idbyuser"]};
         }
         
         [_manager POST:@"http://www.eamondev.com/sneekback/upload.php" parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
@@ -1309,6 +1500,10 @@ typedef void (^CompletionHandlerType)();
                             marker3.icon = [UIImage imageNamed:@"marker"];
                             marker3.userData = @{@"marker_id":r};
                             marker3.map = _mapView_;
+                            
+                            /*CLLocationCoordinate2D circleCenter = _mapView_.myLocation.coordinate;
+                            MKCircle *circ = [MKCircle circleWithCenterCoordinate:circleCenter radius:91.44];
+                            [self registerRegionWithCircularOverlay:circ andIdentifier:r];*/
                         }
                     }];
                 }
@@ -1322,7 +1517,7 @@ typedef void (^CompletionHandlerType)();
                             // Do something with the found objects
                             for (PFObject *object in objects) {
                                 NSMutableDictionary *yy = [[NSMutableDictionary alloc] initWithDictionary:[object objectForKey:@"usersAndPoints"]];
-                                NSLog(@"%@", [yy description]);
+                                NSLog(@"usersandpoints: &&&&&LLL : : : %@", [object objectForKey:@"usersAndPoints"]);
                                 
                                 NSArray *keyArray = [yy allKeys];
                                 
@@ -1331,8 +1526,10 @@ typedef void (^CompletionHandlerType)();
                                         NSLog(@"key key key: %@", keyd);
                                         NSLog(@"userdefault: %@", [userdefaults valueForKey:@"pfuser"]);
                                         NSMutableArray *locs = [[NSMutableArray alloc] initWithArray:[yy objectForKey:keyd]];
-                                        
-                                        NSDictionary *alloooc = [[NSDictionary alloc] initWithObjectsAndKeys:r, @"marker_id", point, @"pointdat", [userdefaults objectForKey:@"pfuser"], @"title", stored, @"count", nil];
+                                        int countup = [[userdefaults objectForKey:@"groupmatches"] intValue];
+                                        countup++;
+                                        NSNumber *hideit = [NSNumber numberWithInt:0];
+                                        NSDictionary *alloooc = [[NSDictionary alloc] initWithObjectsAndKeys:[userdefaults valueForKey:@"pfuser"], @"username", r, @"marker_id", point, @"pointdat", [userdefaults objectForKey:@"pfuser"], @"title", stored, @"count", [[NSString alloc] initWithFormat:@"%i", countup], @"groupmatches", [userdefaults objectForKey:@"idbyuser"], @"idbyuser", hideit, @"hideit", nil];
                                         
                                         //NSLog(@"locs: %@", [locs description]);
                                         
@@ -1347,6 +1544,10 @@ typedef void (^CompletionHandlerType)();
                                                 marker3.icon = [UIImage imageNamed:@"marker"];
                                                 marker3.userData = @{@"marker_id":r};
                                                 marker3.map = _mapView_;
+                                                
+                                                /*CLLocationCoordinate2D circleCenter = _mapView_.myLocation.coordinate;
+                                                MKCircle *circ = [MKCircle circleWithCenterCoordinate:circleCenter radius:91.44];
+                                                [self registerRegionWithCircularOverlay:circ andIdentifier:r];*/
                                             }
                                             else {
                                                 NSLog(@"%@", [error description]);
@@ -1511,14 +1712,18 @@ typedef void (^CompletionHandlerType)();
                                 for(NSDictionary *outterar in locs) {
                                     
                                     //PFGeoPoint *storin = [outterar objectForKey:@"pointdat"];
+                                    NSLog(@"deleteObjectIdForGroup: %@\n", deleteObjectIdForGroup);
+                                    NSLog(@"marker_id: %@", [outterar objectForKey:@"marker_id"]);
                                     
                                     if([deleteObjectIdForGroup isEqualToString:[outterar objectForKey:@"marker_id"]]) {
-                                        //[outterar setValue:NULL forKey:@"pointdat"];
                                         NSUInteger ind = [locs indexOfObject:outterar];
                                         [locs removeObjectAtIndex:ind];
+                                        //[outterar setValue:[NSNumber numberWithInt:1] forKey:@"hideit"];
                                         [yy setObject:locs forKey:keyd];
                                         [object setObject:yy forKey:@"usersAndPoints"];
-                                        [object saveEventually];
+                                        [object saveEventually:^(BOOL succeeded, NSError * _Nullable error) {
+                                            staticMarker.map = nil;
+                                        }];
                                     }
                                 }
                             }
@@ -1562,6 +1767,10 @@ typedef void (^CompletionHandlerType)();
                                 initMarker.icon = [UIImage imageNamed:@"marker"];
                                 initMarker.userData = @{@"marker_id":[object objectForKey:@"marker_id"]};
                                 initMarker.map = _mapView_;
+                                
+                                /*CLLocationCoordinate2D circleCenter = CLLocationCoordinate2DMake(point.latitude, point.longitude);
+                                MKCircle *circ = [MKCircle circleWithCenterCoordinate:circleCenter radius:91.44];
+                                [self registerRegionWithCircularOverlay:circ andIdentifier:[object objectForKey:@"marker_id"]];*/
                             }
                         }else{
                             NSLog(@"%@", [error description]);
@@ -1577,6 +1786,7 @@ typedef void (^CompletionHandlerType)();
                             NSLog(@"Successfully retrieved %lu scores.", (unsigned long)objects.count);
                             // Do something with the found objects
                             for (PFObject *object in objects) {
+                                NSLog(@"%@ object for making group mark *****************", [object description]);
                                 NSMutableDictionary *yy = [[NSMutableDictionary alloc] initWithDictionary:[object objectForKey:@"usersAndPoints"]];
                                 NSLog(@"%@", [yy description]);
                                 
@@ -1593,6 +1803,10 @@ typedef void (^CompletionHandlerType)();
                                         initMarker.icon = [UIImage imageNamed:@"marker"];
                                         initMarker.userData = @{@"marker_id":[outterar objectForKey:@"marker_id"]};
                                         initMarker.map = _mapView_;
+                                        
+                                        /*CLLocationCoordinate2D circleCenter = CLLocationCoordinate2DMake(point.latitude, point.longitude);
+                                        MKCircle *circ = [MKCircle circleWithCenterCoordinate:circleCenter radius:91.44];
+                                        [self registerRegionWithCircularOverlay:circ andIdentifier:[outterar objectForKey:@"marker_id"]];*/
                                     }
                                 }
                             }
@@ -1657,3 +1871,4 @@ typedef void (^CompletionHandlerType)();
 }
 
 @end
+

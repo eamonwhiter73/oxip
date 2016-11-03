@@ -158,6 +158,7 @@
         _tableViewScore.cellLayoutMarginsFollowReadableWidth = NO;
     }
     [tableHolder addSubview:_tableViewScore];
+    [_tableViewScore reloadData];
     
     leaderboardtit = [[UILabel alloc] initWithFrame:leaderboardtitrect];
     leaderboardtit.backgroundColor = [UIColor colorWithRed:218.0f/255.0f green:247.0f/255.0f blue:220.0f/255.0f alpha:1.0f];
@@ -193,13 +194,11 @@
                 for (PFObject *object in objects) {
                     [tableData addObject:[object valueForKey:@"username"]];
                 }
-                /*NSSortDescriptor * descriptor = [[NSSortDescriptor alloc] initWithKey:@"matches" ascending:NO selector:@selector(localizedStandardCompare:)];
-                NSArray *entrieshold = [entries sortedArrayUsingDescriptors:@[descriptor]];*/
                 
-                //FIGURE OUT GROUP BACKEND
+                //FIGURE OUT GROUP BACKEND?????
                 
                 [_tableView reloadData];
-                //[_tableViewScore reloadData]; //*********PROBABLY NEED THIS**************
+                //[_tableViewScore reloadData]; //*********NEED THIS????**************
                 
             }else{
                 NSLog(@"%@", [error description]);
@@ -245,7 +244,8 @@
     NSMutableString *stringstore = [[NSMutableString alloc] initWithString:@""];
     NSString *forend;
     for(NSString* string in matchesForUser) {
-        [stringstore appendString:string];
+        NSString *string2 = [[NSString alloc] initWithFormat:@"%@,", string];
+        [stringstore appendString:string2];
     }
     forend = [[NSString alloc] initWithString:stringstore];
     NSLog(@"stringstore******: %@", forend);

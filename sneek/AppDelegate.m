@@ -12,7 +12,9 @@
 @import GoogleMaps;
 #import <Parse/Parse.h>
 
-@interface AppDelegate ()
+@interface AppDelegate () {
+    NSUserDefaults *userdefaults;
+}
 
 @end
 
@@ -28,6 +30,37 @@
 -(void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void(^)())completionHandler{
     //
 }
+
+/*- (void)locationManager:(CLLocationManager *)manager
+         didEnterRegion:(CLRegion *)region {
+    
+    NSLog(@"did enter region in app delegate 8***************");
+    
+    if(![userdefaults objectForKey:@"idbyuser"]) {
+        PFQuery *sosQuery = [PFUser query];
+        [sosQuery whereKey:@"username" equalTo:[userdefaults objectForKey:@"pfuser"]];
+        sosQuery.limit = 1;
+        
+        NSLog(@"entered and sent push************");
+        
+        [sosQuery getFirstObjectInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+            [PFCloud callFunctionInBackground:@"sendpushnear"
+                               withParameters:@{@"user":(PFUser *)object.objectId, @"username":[userdefaults objectForKey:@"pfuser"]}];
+        }];
+    }
+    else {
+        PFQuery *sosQuery = [PFUser query];
+        [sosQuery whereKey:@"username" equalTo:[userdefaults objectForKey:@"pfuser"]];
+        sosQuery.limit = 1;
+        
+        NSLog(@"entered and sent push for group************");
+        
+        [sosQuery getFirstObjectInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+            [PFCloud callFunctionInBackground:@"sendpushneargroup"
+                               withParameters:@{@"user":(PFUser *)object.objectId, @"username":[userdefaults objectForKey:@"pfuser"]}];
+        }];
+    }
+}*/
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen]bounds]];
@@ -59,7 +92,7 @@
 
     [GMSServices provideAPIKey:@"AIzaSyA9gyzAzIjHmwfoLc_V2FCXaeS-SMjclCA"];
     
-    NSUserDefaults *userdefaults = [NSUserDefaults standardUserDefaults];
+    userdefaults = [NSUserDefaults standardUserDefaults];
     
     _locationMgr = [[CLLocationManager alloc] init];
     [_locationMgr setDelegate:self];
@@ -121,31 +154,89 @@
 - (void)locationManager:(CLLocationManager *)manager
       didUpdateLocations:(NSArray *)locations {
     
-    NSUserDefaults *userdefaults = [NSUserDefaults standardUserDefaults];
-    
     CLLocation* location = [locations lastObject];
     NSDate* eventDate = location.timestamp;
     NSTimeInterval howRecent = [eventDate timeIntervalSinceNow];
     if (fabs(howRecent) < 15.0) {
         
         PFGeoPoint *userGeoPoint = [PFGeoPoint geoPointWithLatitude:location.coordinate.latitude longitude:location.coordinate.longitude];
-        PFQuery *querygeo = [PFQuery queryWithClassName:@"MapPoints"];
-        [querygeo whereKey:@"location" nearGeoPoint:userGeoPoint withinMiles:0.05681818];
-        querygeo.limit = 10;
-        
-        [querygeo findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-            
-            if (objects || objects.count){
-                PFQuery *sosQuery = [PFUser query];
-                [sosQuery whereKey:@"username" equalTo:[userdefaults objectForKey:@"pfuser"]];
-                sosQuery.limit = 1;
                 
-                [sosQuery getFirstObjectInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-                    [PFCloud callFunctionInBackground:@"sendpushnear"
-                                       withParameters:@{@"user":(PFUser *)object.objectId, @"username":[userdefaults objectForKey:@"pfuser"]}];
-                }];
-            }
-        }];
+        if(![userdefaults objectForKey:@"idbyuser"]) {
+            PFQuery *querygeo = [PFQuery queryWithClassName:@"MapPoints"];
+            [querygeo whereKey:@"location" nearGeoPoint:userGeoPoint withinMiles:0.28409091];
+            querygeo.limit = 1;
+            
+            [querygeo findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+                
+                if ([[objects firstObject] objectForKey:@"marker_id"]){
+                    /*NSLog(@"%@ ***********geo description**********     :", [geo description]);
+                    CLLocationCoordinate2D circleCenter = CLLocationCoordinate2DMake([[geo valueForKey:@"location"] latitude], [[geo valueForKey:@"location"] longitude]);
+                    MKCircle *circ = [MKCircle circleWithCenterCoordinate:circleCenter radius:91.44];
+                    ViewController *x = (ViewController*)_navController.visibleViewController;
+                    [x registerRegionWithCircularOverlay:circ andIdentifier:[geo valueForKey:@"marker_id"]];*/
+                    
+                    PFQuery *sosQuery = [PFUser query];
+                    [sosQuery whereKey:@"username" equalTo:[userdefaults objectForKey:@"pfuser"]];
+                    sosQuery.limit = 1;
+                    
+                    NSLog(@"entered and sent push************");
+                    
+                    [sosQuery getFirstObjectInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+                        [PFCloud callFunctionInBackground:@"sendpushnear"
+                                           withParameters:@{@"user":(PFUser *)object.objectId, @"username":[userdefaults objectForKey:@"pfuser"]}];
+                    }];
+                }
+            }];
+        }
+        else {
+            PFQuery *query2 = [PFQuery queryWithClassName:@"GroupGame"];
+            [query2 whereKey:@"idbyuser" equalTo:[userdefaults objectForKey:@"idbyuser"]];
+            [query2 findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                if (!error) {
+                    // The find succeeded.
+                    NSLog(@"Successfully retrieved %lu scores.", (unsigned long)objects.count);
+                    // Do something with the found objects
+                    for (PFObject *object in objects) {
+                        NSMutableDictionary *yy = [[NSMutableDictionary alloc] initWithDictionary:[object objectForKey:@"usersAndPoints"]];
+                        NSLog(@"%@", [yy description]);
+                        
+                        NSArray *keyArray = [yy allKeys];
+                        
+                        for(NSString *keyd in keyArray) {
+                            NSLog(@"keyd: %@    yyobjectforkey: %@", keyd, [yy objectForKey:keyd]);
+                            NSMutableArray *locs = [[NSMutableArray alloc] initWithArray:[yy objectForKey:keyd]];
+                            
+                            for(NSDictionary *outterar in locs) {
+                                PFGeoPoint *storin = [outterar objectForKey:@"pointdat"];
+                                    
+                                if([storin distanceInMilesTo:userGeoPoint] <= 0.28409091) {
+                                    /*CLLocationCoordinate2D circleCenter = CLLocationCoordinate2DMake(storin.latitude, storin.longitude);
+                                    MKCircle *circ = [MKCircle circleWithCenterCoordinate:circleCenter radius:91.44];
+                                    ViewController *x = (ViewController*)_navController.visibleViewController;
+                                    [x registerRegionWithCircularOverlay:circ andIdentifier:[storin valueForKey:@"marker_id"]];
+                                    count++;*/
+                                    if([outterar objectForKey:@"marker_id"]) {
+                                        PFQuery *sosQuery = [PFUser query];
+                                        [sosQuery whereKey:@"username" equalTo:[userdefaults objectForKey:@"pfuser"]];
+                                        sosQuery.limit = 1;
+                                        
+                                        NSLog(@"entered and sent push for group************");
+                                        
+                                        [sosQuery getFirstObjectInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+                                            [PFCloud callFunctionInBackground:@"sendpushneargroup"
+                                                               withParameters:@{@"user":(PFUser *)object.objectId, @"username":[userdefaults objectForKey:@"pfuser"]}];
+                                        }];
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                else {
+                    NSLog(@"%@", [error description]);
+                }
+            }];
+        }
     }
 }
 
