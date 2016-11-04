@@ -18,6 +18,7 @@
 @property (strong, nonatomic) CLLocationManager *locationMgr;
 @property (nonatomic, strong) UINavigationController *navController;
 @property (nonatomic, assign) NSNumber* ran;
+@property (nonatomic, assign) BOOL receivednotif;
 
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;

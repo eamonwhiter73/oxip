@@ -118,7 +118,7 @@ typedef void (^CompletionHandlerType)();
 
 - (void)viewDidLoad {
     
-    //ADD ONCE FIGURED OUT PHANTOM PIX
+    //ADD WALKING DETECTION MAYBE
     /*MotionHandler* motion = [[MotionHandler alloc] init];
     [motion startMotionActivityMonitoring];*/
     
@@ -148,11 +148,34 @@ typedef void (^CompletionHandlerType)();
     
     [self centerloc];
     
+    if([(AppDelegate*)[[UIApplication sharedApplication] delegate] receivednotif]) {
+        
+    }
+    
+    //remove**************//*****//------===
+    //remove**************//*****//------===
+    //remove**************//*****//------===
+    //remove**************//*****//------===
+    //remove**************//*****//------===
+    //remove**************//*****//------===
+    //remove**************//*****//------===
+    //remove**************//*****//------===
     //remove**************//*****//------===
     
     [userdefaults setObject:@"old" forKey:@"new"];
     [userdefaults synchronize];
+    
     //remove**************//*****//------===
+    //remove**************//*****//------===
+    //remove**************//*****//------===
+    //remove**************//*****//------===
+    //remove**************//*****//------===
+    //remove**************//*****//------===
+    //remove**************//*****//------===
+    //remove**************//*****//------===
+    //remove**************//*****//------===
+
+
     
     [[PFInstallation currentInstallation] setObject:[PFUser currentUser] forKey:@"user"];
     [[PFInstallation currentInstallation] saveEventually];
@@ -335,6 +358,7 @@ typedef void (^CompletionHandlerType)();
         camerabut.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"camerabut"]];
         groupGame = [[UIButton alloc] initWithFrame:CGRectMake(270.5, 32, 37.5, 37.5)];
         groupGame.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:8.0];
+        [[groupGame layer] setBorderWidth:1.0f];
         markershow = [[UIButton alloc] initWithFrame:CGRectMake(12, 32, 37.5, 37.5)];
         markershow.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:9.0];
     }
@@ -369,6 +393,7 @@ typedef void (^CompletionHandlerType)();
         [notclose setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:14.0]];
         groupGame = [[UIButton alloc] initWithFrame:CGRectMake(325.5, 32, 37.5, 37.5)];
         groupGame.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:8.0];
+        [[groupGame layer] setBorderWidth:1.0f];
         markershow = [[UIButton alloc] initWithFrame:CGRectMake(12, 32, 37.5, 37.5)];
         markershow.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:9.0];
 
@@ -404,6 +429,7 @@ typedef void (^CompletionHandlerType)();
         [notclose setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:14.0]];
         groupGame = [[UIButton alloc] initWithFrame:CGRectMake(364.5, 32, 37.5, 37.5)];
         groupGame.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:8.0];
+        [[groupGame layer] setBorderWidth:1.0f];
         markershow = [[UIButton alloc] initWithFrame:CGRectMake(12, 32, 37.5, 37.5)];
         markershow.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:9.0];
     }
@@ -439,6 +465,7 @@ typedef void (^CompletionHandlerType)();
         [notclose setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:14.0]];
         groupGame = [[UIButton alloc] initWithFrame:CGRectMake(669, 44, 75, 75)];
         groupGame.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:16.0];
+        [[groupGame layer] setBorderWidth:2.0f];
         markershow = [[UIButton alloc] initWithFrame:CGRectMake(24, 44, 75, 75)];
         markershow.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:18.0];
     }
@@ -474,6 +501,7 @@ typedef void (^CompletionHandlerType)();
         [notclose setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:28.0]];
         groupGame = [[UIButton alloc] initWithFrame:CGRectMake(875.5, 56, 112.5, 112.5)];
         groupGame.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:24.0];
+        [[groupGame layer] setBorderWidth:3.0f];
         markershow = [[UIButton alloc] initWithFrame:CGRectMake(36, 56, 112.5, 112.5)];
         markershow.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:27.0];
     }
@@ -498,7 +526,7 @@ typedef void (^CompletionHandlerType)();
     [groupGame setTitle:@"GROUP\nGAME" forState:UIControlStateNormal];
     groupGame.layer.masksToBounds = true;
     groupGame.layer.cornerRadius = 5.0;
-    [[groupGame layer] setBorderWidth:1.0f];
+    
     [[groupGame layer] setBorderColor:[UIColor colorWithRed:218.0f/255.0f green:247.0f/255.0f blue:220.0f/255.0f alpha:1.0f].CGColor];
     groupGame.titleLabel.textAlignment = NSTextAlignmentCenter;
     groupGame.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;

@@ -72,8 +72,8 @@
     }
     if([screenWidth intValue] == 375) {
         tablehold = CGRectMake(10, 140, 355, 432);
-        tableviewhold = CGRectMake(0, 0, 270, 432);
-        tableviewscore = CGRectMake(285, 0, 70, 432);
+        tableviewhold = CGRectMake(0, 0, 165.66, 432);
+        tableviewscore = CGRectMake(189.33, 0, 165.66, 432);
         leaderboardtitrect = CGRectMake(0, 20, 375, 60);
         userrect = CGRectMake(10, 105, 140, 20);
         username.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:14.0];
@@ -84,8 +84,8 @@
     }
     if([screenWidth intValue] == 414) {
         tablehold = CGRectMake(10, 154, 394, 477);
-        tablehold = CGRectMake(0, 0, 298, 477);
-        tableviewscore = CGRectMake(317, 0, 77, 477);
+        tableviewhold = CGRectMake(0, 0, 235, 477);
+        tableviewscore = CGRectMake(255, 0, 139, 477);
         leaderboardtitrect = CGRectMake(0, 22, 414, 80);
         userrect = CGRectMake(10, 116, 154, 22);
         username.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:14.0];
@@ -96,9 +96,8 @@
     }
     if([screenWidth intValue] == 768){
         tablehold = CGRectMake(20, 215, 727, 663);
-        tableviewhold = CGRectMake(0, 0, 607, 663);
-        tableviewscore = CGRectMake(627, 0, 100, 663);
-        
+        tableviewhold = CGRectMake(0, 0, 407, 663);
+        tableviewscore = CGRectMake(427, 0, 300, 663);
         leaderboardtitrect = CGRectMake(0, 30, 768, 110.5);
         attrString = [[NSAttributedString alloc] initWithString:@"GROUP GAMES" attributes:@{ NSParagraphStyleAttributeName : style, NSForegroundColorAttributeName : [UIColor colorWithRed:156.0f/255.0f green:214.0f/255.0f blue:215.0f/255.0f alpha:1.0f], NSFontAttributeName : [UIFont fontWithName:@"HelveticaNeue-Bold" size:48.0]}];
         
@@ -111,8 +110,8 @@
     }
     if([screenWidth intValue] == 1024){
         tablehold = CGRectMake(27, 287, 969, 885);
-        tableviewhold = CGRectMake(0, 0, 737, 885);
-        tableviewscore = CGRectMake(778, 0, 191, 885);
+        tableviewhold = CGRectMake(0, 0, 600, 885);
+        tableviewscore = CGRectMake(627, 0, 342, 885);
         
         leaderboardtitrect = CGRectMake(0, 20, 1024, 200);
         attrString = [[NSAttributedString alloc] initWithString:@"GROUP GAMES" attributes:@{ NSParagraphStyleAttributeName : style, NSForegroundColorAttributeName : [UIColor colorWithRed:156.0f/255.0f green:214.0f/255.0f blue:215.0f/255.0f alpha:1.0f], NSFontAttributeName : [UIFont fontWithName:@"HelveticaNeue-Bold" size:72.0]}];
@@ -267,6 +266,17 @@
     [groupGame saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
             
+            for(NSString* user in matchesForUser) {
+                PFQuery *sosQuery = [PFUser query];
+                [sosQuery whereKey:@"username" equalTo:user];
+                sosQuery.limit = 1;
+                
+                [sosQuery getFirstObjectInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+                    [PFCloud callFunctionInBackground:@"sendinvite"
+                                       withParameters:@{@"user":(PFUser *)object.objectId, @"username":[userdefaults objectForKey:@"pfuser"], @"idbyuser":forend}];
+                }];
+            }
+            
             matchesForUser = nil;
             
             [userdefaults setObject:forend forKey:@"idbyuser"];
@@ -329,10 +339,10 @@
         contentV.tag = 100;
         if([screenWidth intValue] == 1024) {
             contentV = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 737, 44)];
-            contentV.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:32.0];
-            cell.textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:32.0];
+            contentV.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:24.0];
+            cell.textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:24.0];
         }
-        else if([screenWidth intValue] == 768) {
+        if([screenWidth intValue] == 768) {
             contentV = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 607, 44)];
             contentV.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:16.0];
             cell.textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:16.0];
@@ -353,9 +363,9 @@
     else {
         cell.textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:16.0];
         if([screenWidth intValue] == 1024) {
-            cell.textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:32.0];
+            cell.textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:24.0];
         }
-        else if([screenWidth intValue] == 768) {
+        if([screenWidth intValue] == 768) {
             cell.textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:16.0];
         }
         cell.textLabel.textColor = [UIColor colorWithRed:153.0f/255.0f green:211.0f/255.0f blue:212.0f/255.0f alpha:1.0f];
