@@ -8,9 +8,9 @@
 
 #import "AppDelegate.h"
 #import "SignUpController.h"
-#import "ViewController.h"
 @import GoogleMaps;
 #import <Parse/Parse.h>
+#import "InvitedView.h"
 
 @interface AppDelegate () {
     NSUserDefaults *userdefaults;
@@ -20,16 +20,108 @@
 
 @implementation AppDelegate
 
+@synthesize viewController;
+
 #define SYSTEM_VERSION_GRATERTHAN_OR_EQUALTO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 
 -(void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler{
     
-    NSLog(@"PRESENT******: %@", [notification description]);
-    completionHandler(UNNotificationPresentationOptionAlert);
+    //NSLog(@"PRESENT******: %@", [notification description]);
+    //[PFPush handlePush:notification.request.content.userInfo];
+    
+    if([[[NSString alloc] initWithString:notification.request.content.body] containsString:@"invited"]) {
+        NSArray *arrayWithTwoStrings = [notification.request.content.body componentsSeparatedByString:@"!"];
+         _idbyusy = [[NSString alloc] initWithString:[arrayWithTwoStrings objectAtIndex:1]];
+        
+        NSArray *invby = [_idbyusy componentsSeparatedByString:@","];
+        NSLog(@"object at index *********** %@", [invby objectAtIndex:0]);
+        self.invitedby = [[NSString alloc] initWithString:[invby objectAtIndex:0]];
+        NSLog(@"object at indexdddddd *********** %@", self.invitedby);
+        InvitedView *z = [[InvitedView alloc] initWithFrame:CGRectMake(50, 244, 220, 120)];
+        z.tag = 68;
+        [[[_navController.childViewControllers firstObject] view] addSubview:z];
+    }
+    
+    if( [UIApplication sharedApplication].applicationState == UIApplicationStateInactive )
+    {
+        NSLog( @"INACTIVE" );
+        [[[_navController childViewControllers] firstObject] performSelector:@selector(setAFlagForHid:) withObject:[NSNumber numberWithBool:YES]];
+        completionHandler( UNNotificationPresentationOptionAlert );
+        //_receivednotif = YES;
+        
+    }
+    else if( [UIApplication sharedApplication].applicationState == UIApplicationStateBackground )
+    {
+        NSLog( @"BACKGROUND" );
+        [[[_navController childViewControllers] firstObject] performSelector:@selector(setAFlagForHid:) withObject:[NSNumber numberWithBool:YES]];
+        completionHandler( UNNotificationPresentationOptionAlert );
+        //_receivednotif = YES;
+        
+    }
+    else
+    {
+        NSLog( @"FOREGROUND" );
+        NSLog(@"%@", [[_navController childViewControllers] firstObject]);
+        [[[_navController childViewControllers] firstObject] performSelector:@selector(setAFlagForHid:) withObject:[NSNumber numberWithBool:YES]];
+        //completionHandler( UNNotificationPresentationOptionAlert );
+        //_receivednotif = YES;
+    }
+    
+    //completionHandler(UNNotificationPresentationOptionAlert);
 }
 
--(void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void(^)())completionHandler{
-    NSLog(@"RESPONSE******: %@", [response description]);
+- (NSString*)getIdbyusy {
+    return _idbyusy;
+}
+
+
+- (NSString*)getInvitedBy {
+    return self.invitedby;
+}
+
+-(void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(nonnull UNNotificationResponse *)response withCompletionHandler:(nonnull void (^)())completionHandler {
+
+    /*NSLog(@"RESPONSE******: %@", [response description]);
+    
+    // custom code to handle notification content*/
+    
+    if( [UIApplication sharedApplication].applicationState == UIApplicationStateInactive )
+    {
+        NSLog( @"INACTIVE" );
+        [[[[[[[UIApplication sharedApplication] delegate] window] rootViewController] childViewControllers] firstObject] performSelector:@selector(setAFlagForHid:) withObject:[NSNumber numberWithBool:YES]];
+        completionHandler( UIBackgroundFetchResultNewData );
+        //_receivednotif = YES;
+        
+    }
+    else if( [UIApplication sharedApplication].applicationState == UIApplicationStateBackground )
+    {
+        NSLog( @"BACKGROUND" );
+        [[[[[[[UIApplication sharedApplication] delegate] window] rootViewController] childViewControllers] firstObject] performSelector:@selector(setAFlagForHid:) withObject:[NSNumber numberWithBool:YES]];
+        completionHandler( UIBackgroundFetchResultNewData );
+        //_receivednotif = YES;
+        
+    }
+    else
+    {
+        //
+    }
+    
+    /*if([viewController getInvitedIsSetHid]) {
+
+        NSLog(@"inside getinvitedissethid**(***(*(*(*(");
+        [viewController setInvitedIsSetHid:NO];
+            
+    }
+    else {
+
+        NSLog(@"inside setinvitedissethid**(***(*(*(*(");
+        [viewController setInvitedIsSetHid:YES];
+        
+    }*/
+    
+    /*[[[[[[[UIApplication sharedApplication] delegate] window] rootViewController] childViewControllers] firstObject] performSelector:@selector(setAFlagForHid:) withObject:[NSNumber numberWithBool:YES]];*/
+    
+    completionHandler( UIBackgroundFetchResultNewData );
 }
 
 /*- (void)locationManager:(CLLocationManager *)manager
@@ -63,10 +155,18 @@
     }
 }*/
 
+- (void)setInvitedBy:(NSString *)set {
+    self.invitedby = [[NSString alloc] initWithString:set];
+}
+
+/*- (void)setReceivedNotifToNo {
+    _receivednotif = NO;
+}*/
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen]bounds]];
+
     
-    _receivednotif = NO;
     
     [Parse enableLocalDatastore];
     
@@ -76,7 +176,7 @@
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
     UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
-    center.delegate = self;
+    [center setDelegate:self];
     
     [center getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings * _Nonnull settings) {
         
@@ -127,6 +227,7 @@
     
     else {
         ViewController *map = [[ViewController alloc] init];
+        map.view.tag = 1337;
         [_navController setViewControllers:@[map]];
     }
     
@@ -251,19 +352,49 @@
     [currentInstallation saveEventually];
 }
 
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+/*- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     [PFPush handlePush:userInfo];
-    _receivednotif = YES;
-}
+    NSLog(@"userinfo ************* \n %@", [userInfo description]);
+}*/
+
+/*-(void) application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
+{
+    NSLog( @"HANDLE PUSH, didReceiveRemoteNotification: %@", userInfo );
+    
+    // custom code to handle notification content
+    [PFPush handlePush:userInfo];
+    
+    if( [UIApplication sharedApplication].applicationState == UIApplicationStateInactive )
+    {
+        NSLog( @"INACTIVE" );
+        completionHandler( UIBackgroundFetchResultNewData );
+        _receivednotif = YES;
+        
+    }
+    else if( [UIApplication sharedApplication].applicationState == UIApplicationStateBackground )
+    {
+        NSLog( @"BACKGROUND" );
+        completionHandler( UIBackgroundFetchResultNewData );
+        _receivednotif = YES;
+        
+    }
+    else
+    {
+        NSLog( @"FOREGROUND" );
+        completionHandler( UIBackgroundFetchResultNewData );
+        _receivednotif = YES;
+        
+    }
+}*/
 
 - (void)applicationWillResignActive:(UIApplication *)application {
-    _receivednotif = NO;
+    
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-    _receivednotif = NO;
+    
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 }
@@ -277,7 +408,7 @@
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
-    _receivednotif = NO;
+    
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     // Saves changes in the application's managed object context before the application terminates.
     [self saveContext];

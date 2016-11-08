@@ -31,6 +31,7 @@
 		DD5537A21C06A3A7002B52DD /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD5537A11C06A3A7002B52DD /* Social.framework */; };
 		DD68D60E1D961FC5007B5E36 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD68D60D1D961FC4007B5E36 /* UserNotifications.framework */; };
 		DD78FDD51DC2E8E9000BEA93 /* InvisibleButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = DD78FDD41DC2E8E9000BEA93 /* InvisibleButtonView.m */; };
+		DD7F38121DCD0B3900E9E2D3 /* InvitedView.m in Sources */ = {isa = PBXBuildFile; fileRef = DD7F38111DCD0B3900E9E2D3 /* InvitedView.m */; };
 		DD8D199E1C26E84F000E7418 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD8D199C1C26E84F000E7418 /* Bolts.framework */; };
 		DD8D199F1C26E84F000E7418 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD8D199D1C26E84F000E7418 /* Parse.framework */; };
 		DD8D19A21C28C267000E7418 /* LeaderboardController.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8D19A11C28C267000E7418 /* LeaderboardController.m */; };
@@ -112,6 +113,8 @@
 		DD68D60D1D961FC4007B5E36 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		DD78FDD31DC2E74D000BEA93 /* InvisibleButtonView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InvisibleButtonView.h; sourceTree = "<group>"; };
 		DD78FDD41DC2E8E9000BEA93 /* InvisibleButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InvisibleButtonView.m; sourceTree = "<group>"; };
+		DD7F380F1DCD0ADF00E9E2D3 /* InvitedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InvitedView.h; sourceTree = "<group>"; };
+		DD7F38111DCD0B3900E9E2D3 /* InvitedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InvitedView.m; sourceTree = "<group>"; };
 		DD8D199C1C26E84F000E7418 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		DD8D199D1C26E84F000E7418 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		DD8D19A01C28C257000E7418 /* LeaderboardController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LeaderboardController.h; sourceTree = "<group>"; };
@@ -279,6 +282,8 @@
 				DD78FDD31DC2E74D000BEA93 /* InvisibleButtonView.h */,
 				DD06211A1DC38E7400119D99 /* GroupController.h */,
 				DD06211B1DC38E7400119D99 /* GroupController.m */,
+				DD7F38111DCD0B3900E9E2D3 /* InvitedView.m */,
+				DD7F380F1DCD0ADF00E9E2D3 /* InvitedView.h */,
 			);
 			path = sneek;
 			sourceTree = "<group>";
@@ -391,7 +396,7 @@
 		DD3000ED1C067A94002E43C1 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 0810;
 				ORGANIZATIONNAME = "Eamon White";
 				TargetAttributes = {
 					DD3000F41C067A95002E43C1 = {
@@ -483,6 +488,7 @@
 				DDA63C081D63BC5C00A9E878 /* AFURLRequestSerialization.m in Sources */,
 				DD08D70C1D8495B2002D9D11 /* RespTutorial.m in Sources */,
 				DD06211C1DC38E7400119D99 /* GroupController.m in Sources */,
+				DD7F38121DCD0B3900E9E2D3 /* InvitedView.m in Sources */,
 				DDA63C0A1D63BC5C00A9E878 /* AFURLSessionManager.m in Sources */,
 				DDA63C061D63BC5C00A9E878 /* AFNetworkReachabilityManager.m in Sources */,
 			);
@@ -524,6 +530,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -571,6 +578,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;

@@ -11,12 +11,12 @@
 
 @interface GroupController () {
     NSMutableArray *tableData;
-    NSMutableArray *matchesForUser;
     NSMutableArray *entries;
     int countUsers;
     NSArray *sortedFirstArray;
     NSArray *sortedSecondArray;
     UIButton *backToMap;
+    UIButton *leaveGroup;
     NSDictionary *dictionary;
     UILabel *leaderboardtit;
     UILabel *username;
@@ -31,14 +31,35 @@
 
 @synthesize myViewController;
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    if(![userdefaults objectForKey:@"idbyuser"]) {
+        NSLog(@"inside contains object**************&&&&&&&&&&viewappeared");
+        _matchesForUser = [[NSMutableArray alloc] init];
+        [_matchesForUser addObject:[userdefaults objectForKey:@"pfuser"]];
+        [_tableViewScore reloadData];
+    }
+}
+
 - (void)viewDidLoad {
+    
     userdefaults = [NSUserDefaults standardUserDefaults];
+    
+    [userdefaults setValue:nil forKey:@"idbyusertemp"];
+    [userdefaults synchronize];
+    
+    /*if(![userdefaults objectForKey:@"idbyuser"]) {
+        NSLog(@"inside contains object**************&&&&&&&&&&viewappeared");
+        _matchesForUser = [[NSMutableArray alloc] init];
+        [_matchesForUser addObject:[userdefaults objectForKey:@"pfuser"]];
+        [_tableViewScore reloadData];
+    }*/
+    
+    //[myViewController setLeftgroup:@"here"];
     
     [self.view setBackgroundColor:[UIColor colorWithRed:156.0f/255.0f green:214.0f/255.0f blue:215.0f/255.0f alpha:1.0f]];
     tableData = [[NSMutableArray alloc] init];
     sortedFirstArray = [[NSArray alloc] init];
-    matchesForUser = [[NSMutableArray alloc] init];
-    [matchesForUser addObject:[userdefaults objectForKey:@"pfuser"]];
     
     screenWidth = @([UIScreen mainScreen].bounds.size.width);
     CGRect tablehold = CGRectZero;
@@ -48,6 +69,7 @@
     CGRect userrect = CGRectZero;
     CGRect matchesrect = CGRectZero;
     CGRect backtomaprect = CGRectZero;
+    CGRect leavegrouprect = CGRectZero;
     
     NSMutableParagraphStyle *style =  [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
     style.alignment = NSTextAlignmentCenter;
@@ -57,6 +79,7 @@
     username = [[UILabel alloc] initWithFrame:userrect];
     matches = [[UILabel alloc] initWithFrame:matchesrect];
     backToMap = [[UIButton alloc] initWithFrame:backtomaprect];
+    leaveGroup = [[UIButton alloc] initWithFrame:leavegrouprect];
     
     if([screenWidth intValue] == 320) {
         tablehold = CGRectMake(10, 120, 300, 368);
@@ -67,8 +90,10 @@
         matchesrect = CGRectMake(170, 90, 140, 20);
         matches.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:14.0];
         username.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:14.0];
-        backtomaprect = CGRectMake(10, 498, 300, 60);
-        backToMap.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:20.0];
+        backtomaprect = CGRectMake(10, 498, 145, 60);
+        backToMap.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:14.0];
+        leavegrouprect = CGRectMake(165, 498, 145, 60);
+        leaveGroup.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:14.0];
     }
     if([screenWidth intValue] == 375) {
         tablehold = CGRectMake(10, 140, 355, 432);
@@ -124,6 +149,8 @@
         backtomaprect = CGRectMake(27, 1198, 969, 147);
         backToMap.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:54.0];
     }
+    
+    _matchesForUser = [[NSMutableArray alloc] init];
     
     tableHolder = [[UIView alloc] initWithFrame:tablehold];
     tableHolder.layoutMargins = UIEdgeInsetsZero;
@@ -205,7 +232,21 @@
         });
     }];
     
-    if([userdefaults objectForKey:@"idbyuser"]) {
+    /*if([_matchesForUser count] == 0 || !_matchesForUser) {
+        NSLog(@"inside contains object**************&&&&&&&&&&");
+        _matchesForUser = [[NSMutableArray alloc] init];
+        [_matchesForUser addObject:[userdefaults objectForKey:@"pfuser"]];
+        [_tableViewScore reloadData];
+    }*/
+    
+    if([[userdefaults valueForKey:@"idbyuser"] length] == 0) {
+        NSLog(@"inside contains object**************&&&&&&&&&&");
+        _matchesForUser = [[NSMutableArray alloc] init];
+        [_matchesForUser addObject:[userdefaults objectForKey:@"pfuser"]];
+        [_tableViewScore reloadData];
+    }
+    else {
+        NSLog(@"%@ inside else contains object else EELSE@@@@*@**@@**@*@*@*", [userdefaults objectForKey:@"idbyuser"]);
         PFQuery *query2 = [PFQuery queryWithClassName:@"GroupGame"];
         [query2 whereKey:@"idbyuser" equalTo:[userdefaults objectForKey:@"idbyuser"]];
         [query2 findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -213,15 +254,15 @@
                 // The find succeeded.
                 NSLog(@"Successfully retrieved %lu scores.", (unsigned long)objects.count);
                 // Do something with the found objects
-                for (PFObject *object in objects) {
-                    NSDictionary *yy = [object objectForKey:@"usersAndPoints"];
-                    for(id key in yy) {
-                        [matchesForUser addObject:key];
-                    }
+                
+                for(PFObject* object in objects) {
+                    NSLog(@"gotinto where stuff goes into _matchesForUser&^&^^");
+                    NSString *yy = [object objectForKey:@"idbyuser"];
+                    NSArray *items = [yy componentsSeparatedByString:@","];
+                    _matchesForUser = [NSMutableArray arrayWithArray:items];
+                    [_tableViewScore reloadData]; //*********PROBABLY NEED THIS**************
                 }
                 
-                [_tableViewScore reloadData]; //*********PROBABLY NEED THIS**************
-
             } else {
                 // Log details of the failure
                 NSLog(@"Error: %@ %@", error, [error userInfo]);
@@ -233,16 +274,42 @@
     backToMap.backgroundColor = [UIColor colorWithRed:218.0f/255.0f green:247.0f/255.0f blue:220.0f/255.0f alpha:1.0f];
     [backToMap setTitleColor:[UIColor colorWithRed:156.0f/255.0f green:214.0f/255.0f blue:215.0f/255.0f alpha:1.0f] forState:UIControlStateNormal];
     [backToMap addTarget:self action:@selector(dismiss) forControlEvents:UIControlEventTouchUpInside];
-    [backToMap setTitle:@"SAVE AND START" forState:UIControlStateNormal];
+    [backToMap setTitle:@"SAVE OR EXIT" forState:UIControlStateNormal];
     backToMap.layer.masksToBounds = true;
-    backToMap.layer.cornerRadius = 5.0;
+    //backToMap.layer.cornerRadius = 5.0;
     [self.view addSubview:backToMap];
+    
+    [leaveGroup setFrame:leavegrouprect];
+    leaveGroup.backgroundColor = [UIColor colorWithRed:218.0f/255.0f green:247.0f/255.0f blue:220.0f/255.0f alpha:1.0f];
+    [leaveGroup setTitleColor:[UIColor colorWithRed:156.0f/255.0f green:214.0f/255.0f blue:215.0f/255.0f alpha:1.0f] forState:UIControlStateNormal];
+    [leaveGroup addTarget:self action:@selector(leaveGroupFunc) forControlEvents:UIControlEventTouchUpInside];
+    [leaveGroup setTitle:@"LEAVE GROUP" forState:UIControlStateNormal];
+    leaveGroup.layer.masksToBounds = true;
+    //leaveGroup.layer.cornerRadius = 5.0;
+    [self.view addSubview:leaveGroup];
+}
+
+- (void)leaveGroupFunc {
+    [userdefaults setObject:nil forKey:@"idbyuser"];
+    [userdefaults setInteger:0 forKey:@"groupcount"];
+    [userdefaults setInteger:0 forKey:@"groupmatches"];
+    [myViewController.matchesNumber setText:[NSString stringWithFormat:@"%i", 0]];
+    [userdefaults synchronize];
+    _matchesForUser = [[NSMutableArray alloc] init];
+    [_tableViewScore reloadData];
+    [self dismissViewControllerAnimated:NO completion:^{
+        [[myViewController mapView_] clear];
+        [myViewController setAFlag:YES];
+    }];
 }
 
 - (void)dismiss {
+    
+    /* DUMB STRUCTURE FIX*/
+
     NSMutableString *stringstore = [[NSMutableString alloc] initWithString:@""];
     NSString *forend;
-    for(NSString* string in matchesForUser) {
+    for(NSString* string in _matchesForUser) {
         NSString *string2 = [[NSString alloc] initWithFormat:@"%@,", string];
         [stringstore appendString:string2];
     }
@@ -252,43 +319,46 @@
     UIAlertController __block *deviceNotFoundAlertController;
     UIAlertAction *deviceNotFoundAlert  = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];;
     
-    
     NSMutableArray *starter = [[NSMutableArray alloc] init];
     
-    [matchesForUser enumerateObjectsUsingBlock:^(id object, NSUInteger idx, BOOL *stop) {
+    [_matchesForUser enumerateObjectsUsingBlock:^(id object, NSUInteger idx, BOOL *stop) {
         [starter addObject:[[NSArray alloc] init]];
     }];
     
-    NSDictionary *userspoints = [[NSDictionary alloc] initWithObjects:starter forKeys:matchesForUser];
+    NSDictionary *userspoints = [[NSDictionary alloc] initWithObjects:starter forKeys:_matchesForUser];
     PFObject *groupGame = [PFObject objectWithClassName:@"GroupGame"];
     groupGame[@"usersAndPoints"] = userspoints;
     groupGame[@"idbyuser"] = forend;
     [groupGame saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
-            
-            for(NSString* user in matchesForUser) {
-                PFQuery *sosQuery = [PFUser query];
-                [sosQuery whereKey:@"username" equalTo:user];
-                sosQuery.limit = 1;
-                
-                [sosQuery getFirstObjectInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-                    [PFCloud callFunctionInBackground:@"sendinvite"
-                                       withParameters:@{@"user":(PFUser *)object.objectId, @"username":[userdefaults objectForKey:@"pfuser"], @"idbyuser":forend}];
-                }];
+            BOOL track = NO;
+            if(![userdefaults objectForKey:@"idbyuser"]) {
+                track = YES;
+                for(NSString* user in _matchesForUser) {
+                    PFQuery *sosQuery = [PFUser query];
+                    [sosQuery whereKey:@"username" equalTo:user];
+                    sosQuery.limit = 1;
+                    
+                    [sosQuery getFirstObjectInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+                        [PFCloud callFunctionInBackground:@"sendinvite"
+                                           withParameters:@{@"user":(PFUser *)object.objectId, @"username":[userdefaults objectForKey:@"pfuser"], @"idbyuser":forend}];
+                    }];
+                }
             }
             
-            matchesForUser = nil;
+            //_matchesForUser = nil;
             
             [userdefaults setObject:forend forKey:@"idbyuser"];
-            [userdefaults setInteger:0 forKey:@"groupcount"];
             [userdefaults synchronize];
             
             [self dismissViewControllerAnimated:YES completion:^{
-                [[myViewController mapView_] clear];
-                
-                deviceNotFoundAlertController = [UIAlertController alertControllerWithTitle:@"MARKERS" message:@"Only markers from your group game will be visible to you. To view all markers, tap the show all markers button in the top left corner of the screen." preferredStyle:UIAlertControllerStyleAlert];
-                [deviceNotFoundAlertController addAction:deviceNotFoundAlert];
-                [myViewController presentViewController:deviceNotFoundAlertController animated:NO completion:NULL];
+                if(track) {
+                    [[myViewController mapView_] clear];
+                    
+                    deviceNotFoundAlertController = [UIAlertController alertControllerWithTitle:@"MARKERS" message:@"Only markers from your group game will be visible to you. To view all markers, tap the show all markers button in the top left corner of the screen." preferredStyle:UIAlertControllerStyleAlert];
+                    [deviceNotFoundAlertController addAction:deviceNotFoundAlert];
+                    [myViewController presentViewController:deviceNotFoundAlertController animated:NO completion:NULL];
+                }
             }];
         } else {
             UIAlertController *deviceNotFoundAlertController = [UIAlertController alertControllerWithTitle:@"NOT SAVED" message:@"Your game was not saved, try again." preferredStyle:UIAlertControllerStyleAlert];
@@ -297,15 +367,15 @@
             [self presentViewController:deviceNotFoundAlertController animated:NO completion:NULL];
         }
     }];
-    
-    
 }
+
+
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if(tableView == _tableView)
         return [tableData count];
     else
-        return [matchesForUser count];
+        return [_matchesForUser count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -377,9 +447,9 @@
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         }
         NSLog(@"indexpath.row: %ld", indexPath.row);
-        NSLog(@"matchesforusercount: %ld", [matchesForUser count]);
-        if([matchesForUser count] > indexPath.row) {
-            NSString *matchAmount = [matchesForUser objectAtIndex:indexPath.row];
+        NSLog(@"_matchesForUsercount: %ld", [_matchesForUser count]);
+        if([_matchesForUser count] > indexPath.row) {
+            NSString *matchAmount = [_matchesForUser objectAtIndex:indexPath.row];
             cell.textLabel.text = matchAmount;
         }
         
@@ -393,15 +463,26 @@
         UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
         UILabel *label = (UILabel*)[cell viewWithTag:100];
         
-        if (![matchesForUser containsObject:[label text]]) {
-            NSLog(@"%@", [label text]);
-            [matchesForUser addObject:[label text]];
+        if(![userdefaults objectForKey:@"idbyuser"]) {
+            NSLog(@"got into userdefaults***********");
+            if(![label.text isEqualToString:@""]) {
+                NSLog(@"got into userdefaults add name***********");
+                if(![_matchesForUser containsObject:[userdefaults objectForKey:@"pfuser"]]) {
+                    [_matchesForUser addObject:[userdefaults objectForKey:@"pfuser"]];
+                }
+                
+                if (![_matchesForUser containsObject:[label text]]) {
+                    NSLog(@"got into userdefaults add label text***********");
+                    NSLog(@"%@", [label text]);
+                    [_matchesForUser addObject:[label text]];
+                }
+                
+                NSLog(@"%@", [_matchesForUser description]);
+                
+                [_tableView reloadData];
+                [_tableViewScore reloadData];
+            }
         }
-        
-        NSLog(@"%@", [matchesForUser description]);
-        
-        [_tableView reloadData];
-        [_tableViewScore reloadData];
     }
 }
 

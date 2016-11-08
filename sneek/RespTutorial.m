@@ -43,25 +43,25 @@
             respbut.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:36.0];
             labe.frame = CGRectMake(20, 60, 280, 400);
         }
-        else if(frame.size.width == 375) {
+        if(frame.size.width == 375) {
             respbut.frame = CGRectMake(10, 547, 355, 92);
             respbut.layer.cornerRadius = 10.0;
             respbut.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:36.0];
             labe.frame = CGRectMake(23, 125, 328, 470);
         }
-        else if(frame.size.width == 414) {
+        if(frame.size.width == 414) {
             respbut.frame = CGRectMake(10, 900, 392, 170);
             respbut.layer.cornerRadius = 10.0;
             respbut.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:36.0];
             labe.frame = CGRectMake(26, 78, 362, 518);
         }
-        else if(frame.size.width == 768) {
+        if(frame.size.width == 768) {
             respbut.frame = CGRectMake(20, 840, 727, 141);
             respbut.layer.cornerRadius = 7.5;
             respbut.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:36.0];
             labe.frame = CGRectMake(48, 192, 672, 721);
         }
-        else if(frame.size.width == 1024) {
+        if(frame.size.width == 1024) {
             respbut.frame = CGRectMake(27, 1096, 969, 230);
             respbut.layer.cornerRadius = 5.0;
             respbut.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:60.0];

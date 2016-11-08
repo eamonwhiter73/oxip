@@ -19,6 +19,9 @@
 @property (nonatomic, strong) UINavigationController *navController;
 @property (nonatomic, assign) NSNumber* ran;
 @property (nonatomic, assign) BOOL receivednotif;
+@property (nonatomic, strong) NSString* invitedby;
+@property (weak) ViewController *viewController;
+@property (strong, nonatomic) NSString *idbyusy;
 
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
@@ -26,6 +29,11 @@
 
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;
+//- (void)setReceivedNotifToNo;
+- (void)setInvitedBy:(NSString *)set;
+- (NSString*)getInvitedBy;
+- (NSString*)getIdbyusy;
+
 
 @end
 

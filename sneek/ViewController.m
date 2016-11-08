@@ -19,7 +19,6 @@
 #import "AppDelegate.h"
 #import <CoreMotion/CoreMotion.h>
 
-
 @import GoogleMaps;
 
 typedef void (^CompletionHandlerType)();
@@ -87,7 +86,6 @@ typedef void (^CompletionHandlerType)();
     bool isResponding;
     GMSMarker *staticMarker;
     NSNumber *staticCount;
-    UILabel *matchesNumber;
     UILabel *myMatches;
     NSNumber *matched;
     NSString *staticObjectId;
@@ -110,11 +108,55 @@ typedef void (^CompletionHandlerType)();
     InvisibleButtonView *invisible;
     GroupController *groupcontroller;
     NSString *deleteObjectIdForGroup;
+    InvitedView* invitedView;
 }
 
 @end
 
 @implementation ViewController {}
+
+- (void)acceptInvite {
+    [userdefaults setValue:[userdefaults objectForKey:@"idbyuser"] forKey:@"idbyusertemp"];
+    [userdefaults setValue:[(AppDelegate*)[[UIApplication sharedApplication] delegate] getIdbyusy] forKey:@"idbyuser"];
+    [userdefaults synchronize];
+    [[self.view viewWithTag:68] removeFromSuperview];
+    //[userdefaults setObject:[(AppDelegate*)[[UIApplication sharedApplication] delegate] getInvitedBy] forKey:@"idbyuser"];
+    NSLog(@"IN ACCEPT INVITE*****");
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    //[self.leftgroup addObserver:self forKeyPath:@"leftgroup" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:nil];
+    //[self.invitedIsSetHid addObserver:self forKeyPath:@"invitedis" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:nil];
+}
+
+/*- (void)setInvited:(InvitedView*)invite {
+    invitedView = invite;
+}*/
+
+- (void)declineInvite {
+    
+    if([[userdefaults valueForKey:@"idbyusertemp"] length] != 0) {
+        NSLog(@"inside != 0 ---_D__D_D_D_D_D_D_D_D_D_Dddddd");
+        [userdefaults setValue:[userdefaults objectForKey:@"idbyusertemp"] forKey:@"idbyuser"];
+        NSLog(@"%@ uiserfdkd defaults idyuser;jkd *******88888 lets go!", [userdefaults valueForKey:@"idbyuser"]);
+    }
+    else {
+        NSLog(@"inside ELSE IIEEKEKE ---_D__D_D_D_D_D_D_D_D_D_Dddddd");
+        [userdefaults setObject:nil forKey:@"idbyuser"];
+    }
+    
+    [userdefaults synchronize];
+
+    [[self.view viewWithTag:68] removeFromSuperview];
+    
+    NSLog(@"IN ACCEPT DECLINE*****");
+}
+
+- (void) viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    //[[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 - (void)viewDidLoad {
     
@@ -122,7 +164,18 @@ typedef void (^CompletionHandlerType)();
     /*MotionHandler* motion = [[MotionHandler alloc] init];
     [motion startMotionActivityMonitoring];*/
     
+    __aFlag = NO;
+    __aFlagForHid = [NSNumber numberWithBool:NO];
+    
     userdefaults = [NSUserDefaults standardUserDefaults];
+    
+    /*[[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(checkForReceivedNote:)
+                                                 name:UIApplicationWillEnterForegroundNotification
+                                               object:nil];*/
+    
+    [userdefaults setValue:nil forKey:@"idbyusertemp"];
+    [userdefaults synchronize];
     
     NSNumber *screenWidth = @([UIScreen mainScreen].bounds.size.width);
     
@@ -148,9 +201,7 @@ typedef void (^CompletionHandlerType)();
     
     [self centerloc];
     
-    if([(AppDelegate*)[[UIApplication sharedApplication] delegate] receivednotif]) {
-        
-    }
+    
     
     //remove**************//*****//------===
     //remove**************//*****//------===
@@ -195,22 +246,21 @@ typedef void (^CompletionHandlerType)();
         if([screenWidth intValue] == 375) {
             first = [[Tutorial alloc] initWithFrame:CGRectMake(0, 0, 375, 667)];
             resptute = [[RespTutorial alloc] initWithFrame:CGRectMake(0, 0, 320, 568)];
+
         }
         if([screenWidth intValue] == 414) {
             first = [[Tutorial alloc] initWithFrame:CGRectMake(0, 0, 414, 737)];
             resptute = [[RespTutorial alloc] initWithFrame:CGRectMake(0, 0, 320, 568)];
-            
         }
         if([screenWidth intValue] == 768) {
             first = [[Tutorial alloc] initWithFrame:CGRectMake(0, 0, 768, 1024)];
             resptute = [[RespTutorial alloc] initWithFrame:CGRectMake(0, 0, 320, 568)];
-            
         }
         if([screenWidth intValue] == 1024) {
             first = [[Tutorial alloc] initWithFrame:CGRectMake(0, 0, 1024, 1366)];
             resptute = [[RespTutorial alloc] initWithFrame:CGRectMake(0, 0, 320, 568)];
-            
         }
+        
         first.backgroundColor = [UIColor colorWithRed:0.0f/255.0f green:0.0f/255.0f blue:0.0f/255.0f alpha:0.4f];
         resptute.backgroundColor = [UIColor colorWithRed:0.0f/255.0f green:0.0f/255.0f blue:0.0f/255.0f alpha:0.4f];
         
@@ -223,8 +273,8 @@ typedef void (^CompletionHandlerType)();
             PFQuery *query = [PFQuery queryWithClassName:@"MapPoints"];
             [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
                 if (!error) {
-                    [groupGame setHidden:NO];
-                    [markershow setHidden:YES];
+                    //[groupGame setHidden:NO];
+                    //[markershow setHidden:YES];
                     for (PFObject *object in objects) {
                         PFGeoPoint *point = [object objectForKey:@"location"];
                         
@@ -249,8 +299,8 @@ typedef void (^CompletionHandlerType)();
             [query2 whereKey:@"idbyuser" equalTo:[userdefaults objectForKey:@"idbyuser"]];
             [query2 findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
                 if (!error) {
-                    [groupGame setHidden:YES];
-                    [markershow setHidden:NO];
+                    //[groupGame setHidden:YES];
+                    //[markershow setHidden:NO];
                     // The find succeeded.
                     NSLog(@"Successfully retrieved %lu scores.", (unsigned long)objects.count);
                     // Do something with the found objects
@@ -328,6 +378,7 @@ typedef void (^CompletionHandlerType)();
     NSAttributedString *attrText = [[NSAttributedString alloc] initWithString:@"MY MATCHES" attributes:@{ NSParagraphStyleAttributeName : style, NSForegroundColorAttributeName : [UIColor colorWithRed:211.0f/255.0f green:243.0f/255.0f blue:219.0f/255.0f alpha:1.0f], NSFontAttributeName : [UIFont fontWithName:@"HelveticaNeue-Bold" size:16.0]}];
     
     if([screenWidth intValue] == 320) {
+        //invitedView = [[InvitedView alloc] initWithFrame:CGRectMake(50, 244, 220, 120)];
         invisible = [[InvisibleButtonView alloc] initWithFrame:CGRectMake(0, 538, 80, 30)];
         tute.frame = CGRectMake(20, 90, 280, 120);
         image = [[UIImageView alloc] initWithFrame:CGRectMake(10, 30, 300, 426)];
@@ -347,9 +398,9 @@ typedef void (^CompletionHandlerType)();
         tome.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tome"]];
         myMatches = [[UILabel alloc] initWithFrame:CGRectMake(67.5, 40, 185, 30)];
         myMatches.layer.cornerRadius = 3.0f;
-        matchesNumber = [[UILabel alloc] initWithFrame:CGRectMake(120, 5, 60, 20)];
-        matchesNumber.layer.cornerRadius = 3.0f;
-        [matchesNumber setFont:[UIFont systemFontOfSize:16]];
+        _matchesNumber = [[UILabel alloc] initWithFrame:CGRectMake(120, 5, 60, 20)];
+        _matchesNumber.layer.cornerRadius = 3.0f;
+        [_matchesNumber setFont:[UIFont systemFontOfSize:16]];
         statusback = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];
         [notclose setFrame:CGRectMake(10, 466, 300, 92)];
         notclose.layer.cornerRadius = 10.0;
@@ -363,6 +414,7 @@ typedef void (^CompletionHandlerType)();
         markershow.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:9.0];
     }
     if([screenWidth intValue] == 375) {
+        invitedView = [[InvitedView alloc] initWithFrame:CGRectMake(100, 288.5, 175, 100)];
         invisible = [[InvisibleButtonView alloc] initWithFrame:CGRectMake(0, 637, 80, 30)];
         tute.frame = CGRectMake(23, 105, 328, 141);
         image = [[UIImageView alloc] initWithFrame:CGRectMake(10, 30, 355, 500)];
@@ -382,9 +434,9 @@ typedef void (^CompletionHandlerType)();
         tome.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tome"]];
         myMatches = [[UILabel alloc] initWithFrame:CGRectMake(95, 40, 185, 30)];
         myMatches.layer.cornerRadius = 3.0f;
-        matchesNumber = [[UILabel alloc] initWithFrame:CGRectMake(120, 5, 60, 20)];
-        matchesNumber.layer.cornerRadius = 3.0f;
-        [matchesNumber setFont:[UIFont systemFontOfSize:16]];
+        _matchesNumber = [[UILabel alloc] initWithFrame:CGRectMake(120, 5, 60, 20)];
+        _matchesNumber.layer.cornerRadius = 3.0f;
+        [_matchesNumber setFont:[UIFont systemFontOfSize:16]];
         statusback = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 375, 20)];
         camerabut = [[UIButton alloc] initWithFrame:CGRectMake(79.75, 5.5, 43, 43)];
         camerabut.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"camerabut"]];
@@ -399,6 +451,7 @@ typedef void (^CompletionHandlerType)();
 
     }
     if([screenWidth intValue] == 414) {
+        invitedView = [[InvitedView alloc] initWithFrame:CGRectMake(100, 318, 214, 100)];
         invisible = [[InvisibleButtonView alloc] initWithFrame:CGRectMake(0, 706, 80, 30)];
         tute.frame = CGRectMake(26, 116, 362, 155.5);
         image = [[UIImageView alloc] initWithFrame:CGRectMake(10, 30, 394, 544)];
@@ -418,9 +471,9 @@ typedef void (^CompletionHandlerType)();
         tome.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tome"]];
         myMatches = [[UILabel alloc] initWithFrame:CGRectMake(105, 44, 204, 33)];
         myMatches.layer.cornerRadius = 3.0f;
-        matchesNumber = [[UILabel alloc] initWithFrame:CGRectMake(120, 7, 77, 20)];
-        matchesNumber.layer.cornerRadius = 3.0f;
-        [matchesNumber setFont:[UIFont systemFontOfSize:16]];
+        _matchesNumber = [[UILabel alloc] initWithFrame:CGRectMake(120, 7, 77, 20)];
+        _matchesNumber.layer.cornerRadius = 3.0f;
+        [_matchesNumber setFont:[UIFont systemFontOfSize:16]];
         statusback = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 414, 20)];
         camerabut = [[UIButton alloc] initWithFrame:CGRectMake(71.5, 5.5, 62, 62)];
         camerabut.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"camerabut"]];
@@ -434,6 +487,7 @@ typedef void (^CompletionHandlerType)();
         markershow.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:9.0];
     }
     if([screenWidth intValue] == 768) {
+        invitedView = [[InvitedView alloc] initWithFrame:CGRectMake(150, 462, 468, 200)];
         invisible = [[InvisibleButtonView alloc] initWithFrame:CGRectMake(0, 994, 80, 30)];
         tute.frame = CGRectMake(48, 161, 671.7, 216.4);
         image = [[UIImageView alloc] initWithFrame:CGRectMake(20, 46, 727, 768)];
@@ -456,9 +510,9 @@ typedef void (^CompletionHandlerType)();
         myMatches = [[UILabel alloc] initWithFrame:CGRectMake(195, 61, 379, 51)];
         myMatches.layer.cornerRadius = 5.5f;
         attrText = [[NSAttributedString alloc] initWithString:@"MY MATCHES" attributes:@{ NSParagraphStyleAttributeName : style, NSForegroundColorAttributeName : [UIColor colorWithRed:211.0f/255.0f green:243.0f/255.0f blue:219.0f/255.0f alpha:1.0f], NSFontAttributeName : [UIFont fontWithName:@"HelveticaNeue-Bold" size:32.0]}];
-        matchesNumber = [[UILabel alloc] initWithFrame:CGRectMake(229, 6, 144.5, 39)];
-        matchesNumber.layer.cornerRadius = 3.0f;
-        [matchesNumber setFont:[UIFont systemFontOfSize:32]];
+        _matchesNumber = [[UILabel alloc] initWithFrame:CGRectMake(229, 6, 144.5, 39)];
+        _matchesNumber.layer.cornerRadius = 3.0f;
+        [_matchesNumber setFont:[UIFont systemFontOfSize:32]];
         statusback = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 768, 20)];
         [notclose setFrame:CGRectMake(20, 840, 727, 141)];
         notclose.layer.cornerRadius = 7.5;
@@ -470,6 +524,7 @@ typedef void (^CompletionHandlerType)();
         markershow.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:18.0];
     }
     if([screenWidth intValue] == 1024) {
+        invitedView = [[InvitedView alloc] initWithFrame:CGRectMake(250, 1241, 524, 250)];
         invisible = [[InvisibleButtonView alloc] initWithFrame:CGRectMake(0, 1336, 80, 30)];
         tute.frame = CGRectMake(64, 215, 895.6, 288.7);
         image = [[UIImageView alloc] initWithFrame:CGRectMake(27, 60, 969, 1009)];
@@ -492,9 +547,9 @@ typedef void (^CompletionHandlerType)();
         myMatches = [[UILabel alloc] initWithFrame:CGRectMake(300, 109, 425, 60)];
         myMatches.layer.cornerRadius = 8.0f;
         attrText = [[NSAttributedString alloc] initWithString:@"MY MATCHES" attributes:@{ NSParagraphStyleAttributeName : style, NSForegroundColorAttributeName : [UIColor colorWithRed:211.0f/255.0f green:243.0f/255.0f blue:219.0f/255.0f alpha:1.0f], NSFontAttributeName : [UIFont fontWithName:@"HelveticaNeue-Bold" size:32.0]}];
-        matchesNumber = [[UILabel alloc] initWithFrame:CGRectMake(228, 10, 189, 41)];
-        matchesNumber.layer.cornerRadius = 8.0f;
-        [matchesNumber setFont:[UIFont systemFontOfSize:32]];
+        _matchesNumber = [[UILabel alloc] initWithFrame:CGRectMake(228, 10, 189, 41)];
+        _matchesNumber.layer.cornerRadius = 8.0f;
+        [_matchesNumber setFont:[UIFont systemFontOfSize:32]];
         statusback = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1024, 20)];
         [notclose setFrame:CGRectMake(27, 1096, 969, 230)];
         notclose.layer.cornerRadius = 5.0;
@@ -505,6 +560,10 @@ typedef void (^CompletionHandlerType)();
         markershow = [[UIButton alloc] initWithFrame:CGRectMake(36, 56, 112.5, 112.5)];
         markershow.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:27.0];
     }
+    
+    invitedView.backgroundColor = [UIColor colorWithRed:156.0f/255.0f green:214.0f/255.0f blue:215.0f/255.0f alpha:1.0f];
+    [invitedView setHidden:YES];
+    [self.view addSubview:invitedView];
     
     [self.view addSubview:invisible];
     
@@ -590,10 +649,10 @@ typedef void (^CompletionHandlerType)();
     myMatches.attributedText = attrText;
     [self.view addSubview:myMatches];
     
-    matchesNumber.backgroundColor = [UIColor colorWithRed:211.0f/255.0f green:243.0f/255.0f blue:219.0f/255.0f alpha:1.0f];
-    matchesNumber.textAlignment = NSTextAlignmentCenter;
-    matchesNumber.textColor = [UIColor colorWithRed:156.0f/255.0f green:214.0f/255.0f blue:215.0f/255.0f alpha:1.0f];
-    matchesNumber.layer.masksToBounds = true;
+    _matchesNumber.backgroundColor = [UIColor colorWithRed:211.0f/255.0f green:243.0f/255.0f blue:219.0f/255.0f alpha:1.0f];
+    _matchesNumber.textAlignment = NSTextAlignmentCenter;
+    _matchesNumber.textColor = [UIColor colorWithRed:156.0f/255.0f green:214.0f/255.0f blue:215.0f/255.0f alpha:1.0f];
+    _matchesNumber.layer.masksToBounds = true;
     
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])  {
         picker = [[UIImagePickerController alloc] init];
@@ -605,15 +664,15 @@ typedef void (^CompletionHandlerType)();
     
     NSUInteger matches;
 
-    if(![userdefaults objectForKey:@"idbyuser"]) {
+    if([[userdefaults valueForKey:@"idbyuser"] length] == 0) {
         matches = [userdefaults integerForKey:@"matches"];
     }
     else {
         matches = [userdefaults integerForKey:@"groupmatches"];
     }
     
-    matchesNumber.text = [[NSString alloc] initWithFormat:@"%lu", (unsigned long)matches];
-    [myMatches addSubview:matchesNumber];
+    _matchesNumber.text = [[NSString alloc] initWithFormat:@"%lu", (unsigned long)matches];
+    [myMatches addSubview:_matchesNumber];
     
     statusback.backgroundColor = [UIColor colorWithRed:156.0f/255.0f green:214.0f/255.0f blue:215.0f/255.0f alpha:1.0f];
     [self.view addSubview:statusback];
@@ -696,80 +755,89 @@ typedef void (^CompletionHandlerType)();
 
 - (void)group {
     if(![userdefaults objectForKey:@"lastidbyuser"]) {
+        [userdefaults setValue:@"allpix" forKey:@"groupbuttonaction"];
+        [userdefaults synchronize];
         [self presentViewController:groupcontroller animated:YES completion:nil];
-        [groupGame setHidden:YES];
-        [markershow setHidden:NO];
+        //[groupGame setHidden:YES];
+        //[markershow setHidden:NO];
+        
     }
     else {
-        [groupGame setHidden:YES];
-        [markershow setHidden:NO];
-        [_mapView_ clear];
-        
-        [userdefaults setObject:[userdefaults objectForKey:@"lastidbyuser"] forKey:@"idbyuser"];
-        
-        NSUInteger matches;
-        matches = [userdefaults integerForKey:@"groupmatches"];
-        matchesNumber.text = [[NSString alloc] initWithFormat:@"%lu", (unsigned long)matches];
+        if([[userdefaults valueForKey:@"groupbuttonaction"] isEqualToString:@"groupg"]) {
+            [self presentViewController:groupcontroller animated:YES completion:nil];
+        }
+        else {
+            //[groupGame setHidden:YES];
+            //[markershow setHidden:NO];
+            [_mapView_ clear];
+            [userdefaults setValue:@"groupg" forKey:@"groupbuttonaction"];
+            [userdefaults setObject:[userdefaults objectForKey:@"lastidbyuser"] forKey:@"idbyuser"];
+            [userdefaults synchronize];
+            
+            NSUInteger matches;
+            matches = [userdefaults integerForKey:@"groupmatches"];
+            _matchesNumber.text = [[NSString alloc] initWithFormat:@"%lu", (unsigned long)matches];
 
-        PFQuery *query2 = [PFQuery queryWithClassName:@"GroupGame"];
-        [query2 whereKey:@"idbyuser" equalTo:[userdefaults objectForKey:@"idbyuser"]];
-        [query2 findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            if (!error) {
-                // The find succeeded.
-                NSLog(@"Successfully retrieved %lu scores.", (unsigned long)objects.count);
-                // Do something with the found objects
-                for (PFObject *object in objects) {
-                    NSMutableDictionary *yy = [[NSMutableDictionary alloc] initWithDictionary:[object objectForKey:@"usersAndPoints"]];
-                    NSLog(@"%@", [yy description]);
-                    
-                    NSArray *keyArray = [yy allKeys];
-                    
-                    for(NSString *keyd in keyArray) {
-                        NSMutableArray *locs = [[NSMutableArray alloc] initWithArray:[yy objectForKey:keyd]];
-                        for(NSDictionary *outterar in locs) {
-                            if(!([outterar valueForKey:@"hideit"] == [NSNumber numberWithInt:1])) {
-                                PFGeoPoint *here = [outterar objectForKey:@"pointdat"];
-                                GMSMarker *initMarker = [GMSMarker markerWithPosition:CLLocationCoordinate2DMake(here.latitude, here.longitude)];
-                                initMarker.title = keyd;
-                                initMarker.appearAnimation = kGMSMarkerAnimationPop;
-                                initMarker.icon = [UIImage imageNamed:@"marker"];
-                                initMarker.userData = @{@"marker_id":[outterar objectForKey:@"marker_id"]};
-                                initMarker.map = _mapView_;
-                                
-                                /*CLLocationCoordinate2D circleCenter = CLLocationCoordinate2DMake(here.latitude, here.longitude);
-                                 MKCircle *circ = [MKCircle circleWithCenterCoordinate:circleCenter radius:91.44];
-                                 [self registerRegionWithCircularOverlay:circ andIdentifier:[outterar objectForKey:@"marker_id"]];*/
-                            }
-                            else {
-                                NSUInteger ind = [locs indexOfObject:outterar];
-                                [locs removeObjectAtIndex:ind];
-                                //[outterar setValue:[NSNumber numberWithInt:1] forKey:@"hideit"];
-                                [yy setObject:locs forKey:keyd];
-                                [object setObject:yy forKey:@"usersAndPoints"];
-                                [object saveEventually];
+            PFQuery *query2 = [PFQuery queryWithClassName:@"GroupGame"];
+            [query2 whereKey:@"idbyuser" equalTo:[userdefaults objectForKey:@"idbyuser"]];
+            [query2 findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                if (!error) {
+                    // The find succeeded.
+                    NSLog(@"Successfully retrieved %lu scores.", (unsigned long)objects.count);
+                    // Do something with the found objects
+                    for (PFObject *object in objects) {
+                        NSMutableDictionary *yy = [[NSMutableDictionary alloc] initWithDictionary:[object objectForKey:@"usersAndPoints"]];
+                        NSLog(@"%@", [yy description]);
+                        
+                        NSArray *keyArray = [yy allKeys];
+                        
+                        for(NSString *keyd in keyArray) {
+                            NSMutableArray *locs = [[NSMutableArray alloc] initWithArray:[yy objectForKey:keyd]];
+                            for(NSDictionary *outterar in locs) {
+                                if(!([outterar valueForKey:@"hideit"] == [NSNumber numberWithInt:1])) {
+                                    PFGeoPoint *here = [outterar objectForKey:@"pointdat"];
+                                    GMSMarker *initMarker = [GMSMarker markerWithPosition:CLLocationCoordinate2DMake(here.latitude, here.longitude)];
+                                    initMarker.title = keyd;
+                                    initMarker.appearAnimation = kGMSMarkerAnimationPop;
+                                    initMarker.icon = [UIImage imageNamed:@"marker"];
+                                    initMarker.userData = @{@"marker_id":[outterar objectForKey:@"marker_id"]};
+                                    initMarker.map = _mapView_;
+                                    
+                                    /*CLLocationCoordinate2D circleCenter = CLLocationCoordinate2DMake(here.latitude, here.longitude);
+                                     MKCircle *circ = [MKCircle circleWithCenterCoordinate:circleCenter radius:91.44];
+                                     [self registerRegionWithCircularOverlay:circ andIdentifier:[outterar objectForKey:@"marker_id"]];*/
+                                }
+                                else {
+                                    NSUInteger ind = [locs indexOfObject:outterar];
+                                    [locs removeObjectAtIndex:ind];
+                                    //[outterar setValue:[NSNumber numberWithInt:1] forKey:@"hideit"];
+                                    [yy setObject:locs forKey:keyd];
+                                    [object setObject:yy forKey:@"usersAndPoints"];
+                                    [object saveEventually];
+                                }
                             }
                         }
                     }
+                } else {
+                    // Log details of the failure
+                    NSLog(@"Error: %@ %@", error, [error userInfo]);
                 }
-            } else {
-                // Log details of the failure
-                NSLog(@"Error: %@ %@", error, [error userInfo]);
-            }
-        }];
+            }];
+        }
     }
 }
 
 - (void)showallmarkers {
-    [groupGame setHidden:NO];
-    [markershow setHidden:YES];
-    
+    //[groupGame setHidden:NO];
+    //[markershow setHidden:YES];
+    [userdefaults setValue:@"allpix" forKey:@"groupbuttonaction"];
     [userdefaults setObject:[userdefaults objectForKey:@"idbyuser"] forKey:@"lastidbyuser"];
-    [userdefaults setObject:NULL forKey:@"idbyuser"];
+    [userdefaults setObject:@"" forKey:@"idbyuser"];
     [userdefaults synchronize];
     
     NSUInteger matches;
     matches = [userdefaults integerForKey:@"matches"];
-    matchesNumber.text = [[NSString alloc] initWithFormat:@"%lu", (unsigned long)matches];
+    _matchesNumber.text = [[NSString alloc] initWithFormat:@"%lu", (unsigned long)matches];
     
     [_mapView_ clear];
     
@@ -811,7 +879,7 @@ typedef void (^CompletionHandlerType)();
 - (void)mapView:(GMSMapView *)mapView didTapInfoWindowOfMarker:(GMSMarker *)marker {
     
     dispatch_async(dispatch_get_main_queue(), ^(void){
-        [matchesNumber setHidden:YES];
+        [_matchesNumber setHidden:YES];
         [myMatches setHidden:YES];
         [menu setHidden:YES];
         [tute setHidden:YES];
@@ -1219,17 +1287,98 @@ typedef void (^CompletionHandlerType)();
                      context:NULL];
 }
 
+/*- (BOOL)getInvitedIsSetHid {
+    return _invitedIsSetHid;
+}*/
+
 - (void)observeValueForKeyPath:(NSString *)keyPath
                       ofObject:(id)object
                         change:(NSDictionary *)change
                        context:(void *)context {
-    if (!firstLocationUpdate_) {
+    
+    /*if ([keyPath isEqual:@"leftgroup"]) {
+        if([_leftgroup isEqualToString:@"left"]) {
+            UIAlertController *alertCont = [UIAlertController alertControllerWithTitle:@"REMOVED" message:@"You have left the group" preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *alertAct = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+            [alertCont addAction:alertAct];
+            [self presentViewController:alertCont animated:YES completion:^{
+                _leftgroup = @"here";
+            }];
+        }
+        
+        // The BOOL value of myBoolean changed, so do something here, like check
+        // what the new BOOL value is, and then turn the indicator view on or off
+    }
+    if ([keyPath isEqual:@"invitedis"]) {
+        NSLog(@"recieved!!!! ****** display VIEW CHOICE ***** \n");
+        if(_invitedIsSetHid) {
+            dispatch_async(dispatch_get_main_queue(), ^(void) {
+                
+                [invitedView setHidden:YES];
+                
+            });
+        }
+        else {
+            dispatch_async(dispatch_get_main_queue(), ^(void) {
+                
+                [invitedView setHidden:NO];
+                
+            });
+        }
+        //[(AppDelegate*)[[UIApplication sharedApplication] delegate] setReceivedNotifToNo];
+    }*/
+    if(!firstLocationUpdate_) {
         
         firstLocationUpdate_ = YES;
         CLLocation *location = [change objectForKey:NSKeyValueChangeNewKey];
         _mapView_.camera = [GMSCameraPosition cameraWithTarget:location.coordinate
                                                          zoom:14];
     }
+    
+}
+
+- (void)setAFlag:(BOOL)flag{
+    BOOL valueChanged = NO;
+    
+    if(__aFlag != flag){
+        valueChanged = YES;
+    }
+    __aFlag = flag;
+    
+    if(valueChanged)
+        [self doSomethingWithTheNewValueOfFlag];
+}
+
+- (void)setAFlagForHid:(NSNumber*)flag{
+    NSLog(@"INSIDE aflagforhid *****((***(*(*(*");
+    BOOL valueChanged = NO;
+    
+    if(__aFlagForHid != flag){
+        NSLog(@"that value changgggeed!!!(!(!(!(!(!(");
+        valueChanged = YES;
+    }
+    
+    __aFlagForHid = flag;
+    
+    if(valueChanged) {
+        NSLog(@"value changed!!!!!!(((()@)(@OIOD");
+        [self doSomethingWithTheNewValueOfFlagForHid];
+    }
+}
+
+- (void)doSomethingWithTheNewValueOfFlag {
+    UIAlertController *alertCont = [UIAlertController alertControllerWithTitle:@"REMOVED" message:@"You have left the group" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *alertAct = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+    [alertCont addAction:alertAct];
+    [self presentViewController:alertCont animated:YES completion:NULL];
+}
+
+- (void)doSomethingWithTheNewValueOfFlagForHid {
+    NSLog(@"issettingtheview******");
+    dispatch_async(dispatch_get_main_queue(), ^(void){
+        NSLog(@"issettingtheviewmu2******");
+        [invitedView setHidden:NO];
+    });
 }
 
 - (void)close {
@@ -1240,7 +1389,7 @@ typedef void (^CompletionHandlerType)();
         [reportButton setHidden:YES];
         [image setHidden:YES];
         [notclose setHidden:YES];
-        [matchesNumber setHidden:NO];
+        [_matchesNumber setHidden:NO];
         [myMatches setHidden:NO];
         [menu setHidden:NO];
     });
@@ -1506,7 +1655,7 @@ typedef void (^CompletionHandlerType)();
                 
                 PFGeoPoint *point = [PFGeoPoint geoPointWithLatitude:_mapView_.myLocation.coordinate.latitude longitude:_mapView_.myLocation.coordinate.longitude];
                 
-                if(![userdefaults objectForKey:@"idbyuser"]) {
+                if([[userdefaults valueForKey:@"idbyuser"] length] == 0) {
                     PFObject *pointstore = [PFObject objectWithClassName:@"MapPoints"];
                     pointstore[@"title"] = [userdefaults objectForKey:@"pfuser"];
                     pointstore[@"location"] = point;
@@ -1554,7 +1703,7 @@ typedef void (^CompletionHandlerType)();
                                         NSLog(@"key key key: %@", keyd);
                                         NSLog(@"userdefault: %@", [userdefaults valueForKey:@"pfuser"]);
                                         NSMutableArray *locs = [[NSMutableArray alloc] initWithArray:[yy objectForKey:keyd]];
-                                        int countup = [[userdefaults objectForKey:@"groupmatches"] intValue];
+                                        int countup = [[userdefaults valueForKey:@"groupmatches"] intValue];
                                         countup++;
                                         NSNumber *hideit = [NSNumber numberWithInt:0];
                                         NSDictionary *alloooc = [[NSDictionary alloc] initWithObjectsAndKeys:[userdefaults valueForKey:@"pfuser"], @"username", r, @"marker_id", point, @"pointdat", [userdefaults objectForKey:@"pfuser"], @"title", stored, @"count", [[NSString alloc] initWithFormat:@"%i", countup], @"groupmatches", [userdefaults objectForKey:@"idbyuser"], @"idbyuser", hideit, @"hideit", nil];
@@ -1623,7 +1772,7 @@ typedef void (^CompletionHandlerType)();
         
         dispatch_async(dispatch_get_main_queue(), ^(void){
             [myMatches setHidden:YES];
-            [matchesNumber setHidden:YES];
+            [_matchesNumber setHidden:YES];
         });
         
         UIImageWriteToSavedPhotosAlbum(info[UIImagePickerControllerOriginalImage], nil, nil, nil);
@@ -1662,7 +1811,7 @@ typedef void (^CompletionHandlerType)();
                 [infobut setHidden:NO];
                 [reportButton setHidden:YES];
                 [myMatches setHidden:NO];
-                [matchesNumber setHidden:NO];
+                [_matchesNumber setHidden:NO];
                 [menu setHidden:NO];
             });
             
@@ -1687,14 +1836,14 @@ typedef void (^CompletionHandlerType)();
                 [userdefaults setInteger:matches forKey:@"groupmatches"];
             }
             
-            matchesNumber.text = [[NSString alloc] initWithFormat:@"%lu", (unsigned long)matches];
+            _matchesNumber.text = [[NSString alloc] initWithFormat:@"%lu", (unsigned long)matches];
             
             PFUser *currentUser = [PFUser currentUser];
             if (currentUser) {
                 if(![userdefaults objectForKey:@"idbyuser"])
-                    [currentUser setValue:matchesNumber.text forKey:@"matches"];
+                    [currentUser setValue:_matchesNumber.text forKey:@"matches"];
                 else
-                    [currentUser setValue:matchesNumber.text forKey:@"groupmatches"];
+                    [currentUser setValue:_matchesNumber.text forKey:@"groupmatches"];
                 
                 [currentUser saveInBackground];
             } else {
@@ -1703,9 +1852,9 @@ typedef void (^CompletionHandlerType)();
                                                     if (user) {
                                                         if(![userdefaults objectForKey:@"idbyuser"])
 
-                                                            [user setObject:matchesNumber.text forKey:@"matches"];
+                                                            [user setObject:_matchesNumber.text forKey:@"matches"];
                                                         else {
-                                                            [user setObject:matchesNumber.text forKey:@"groupmatches"];
+                                                            [user setObject:_matchesNumber.text forKey:@"groupmatches"];
                                                         }
                                                         
                                                         [user saveInBackground];
@@ -1745,7 +1894,9 @@ typedef void (^CompletionHandlerType)();
                                     
                                     if([deleteObjectIdForGroup isEqualToString:[outterar objectForKey:@"marker_id"]]) {
                                         NSUInteger ind = [locs indexOfObject:outterar];
+                                        [outterar setValue:NULL forKey:@"pointdat"];
                                         [locs removeObjectAtIndex:ind];
+                                        [locs insertObject:outterar atIndex:ind];
                                         //[outterar setValue:[NSNumber numberWithInt:1] forKey:@"hideit"];
                                         [yy setObject:locs forKey:keyd];
                                         [object setObject:yy forKey:@"usersAndPoints"];
@@ -1780,6 +1931,7 @@ typedef void (^CompletionHandlerType)();
             
             if([[[NSString alloc] initWithString:[userdefaults objectForKey:@"new"]] isEqualToString:@"new"]) {
                 [userdefaults setObject:@"old" forKey:@"new"];
+                [userdefaults synchronize];
                 
                 if(![userdefaults objectForKey:@"idbyuser"]) {
 
@@ -1879,12 +2031,12 @@ typedef void (^CompletionHandlerType)();
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)pickery {
     if(!isResponding) {
         dispatch_async(dispatch_get_main_queue(), ^(void){
-            [matchesNumber setHidden:NO];
+            [_matchesNumber setHidden:NO];
             [myMatches setHidden:NO];
         });
     }
     else {
-        [matchesNumber setHidden:YES];
+        [_matchesNumber setHidden:YES];
         [myMatches setHidden:YES];
     }
     

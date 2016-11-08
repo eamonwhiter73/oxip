@@ -224,7 +224,7 @@
     userdefaults = [NSUserDefaults standardUserDefaults];
     [userdefaults setInteger:0 forKey:@"matches"];
     [userdefaults setInteger:0 forKey:@"groupmatches"];
-    
+    [userdefaults synchronize];
 }
 
 - (void)createUser {
@@ -245,8 +245,8 @@
         
         return;
     }
-    [user setObject:@"0" forKey:@"matches"];
-    [user setObject:@"0" forKey:@"groupmatches"];
+    [user setValue:0 forKey:@"matches"];
+    [user setValue:0 forKey:@"groupmatches"];
     
     [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (!error) {

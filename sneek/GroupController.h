@@ -14,6 +14,8 @@
 @property (nonatomic, retain) UITableView *tableView;
 @property (nonatomic, retain) UITableView *tableViewScore;
 @property (weak) ViewController *myViewController;
+@property (nonatomic, strong) NSMutableArray *matchesForUser;
+
 
 
 @end
