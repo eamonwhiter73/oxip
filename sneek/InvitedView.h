@@ -2,4 +2,6 @@
 
 @interface InvitedView : UIView
 
+- (void)setHoldUser:(NSString*)us;
+
 @end

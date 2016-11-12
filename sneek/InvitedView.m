@@ -26,7 +26,9 @@ Property *myProperty = appDelegate.property;*/\
     
     if (self) {
         
-        holduser = [[NSString alloc] initWithString:[(AppDelegate *)[[UIApplication sharedApplication] delegate] getInvitedBy]];
+        if([[(AppDelegate *)[[UIApplication sharedApplication] delegate] getInvitedBy] length] > 0) {
+            holduser = [[NSString alloc] initWithString:[(AppDelegate *)[[UIApplication sharedApplication] delegate] getInvitedBy]];
+        }
         
         /*holduser = [[NSString alloc] initWithString:[(AppDelegate*)[[UIApplication sharedApplication] delegate] invitedby]];*/
         
@@ -70,6 +72,10 @@ Property *myProperty = appDelegate.property;*/\
     }
     
     return self;
+}
+
+- (void)setHoldUser:(NSString*)us {
+    holduser = us;
 }
 
 @end

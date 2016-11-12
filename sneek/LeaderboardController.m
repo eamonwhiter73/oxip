@@ -264,7 +264,7 @@
         }];*/
         
         PFQuery *query2 = [PFQuery queryWithClassName:@"GroupGame"];
-        [query2 whereKey:@"idbyuser" equalTo:[userdefaults objectForKey:@"idbyuser"]];
+        [query2 whereKey:@"groupgame_id" equalTo:[userdefaults objectForKey:@"groupgame_id"]];
         [query2 findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error) {
                 entries = [NSMutableArray new];
@@ -278,10 +278,11 @@
                     
                     NSArray *keyArray = [yy allKeys];
                     for(NSString *keyd in keyArray) {
-                        if([[yy objectForKey:keyd] count] == 0) {
-                            
-                            NSMutableDictionary* entry = [NSMutableDictionary new];
+                        NSLog(@"yy objectforkey *********: %@", [yy objectForKey:keyd]);
+                        if ([yy objectForKey:keyd] == nil || [[yy objectForKey:keyd] count] == 0) {
 
+                            NSMutableDictionary* entry = [NSMutableDictionary new];
+                            
                             NSLog(@"inside yy obejet for key count 0 *****####***##*#*#*#");
                             [tableData addObject:keyd];
                             [matchesForUser addObject:@"0"];
@@ -291,18 +292,51 @@
                         }
                         else {
                             NSMutableArray *locs = [[NSMutableArray alloc] initWithArray:[yy objectForKey:keyd]];
+                            //NSString *outerouter;
+                            //NSNumber *outeroutermatches = [NSNumber numberWithInt:0];
                             for(NSDictionary *outterar in locs) {
                                 
                                 NSMutableDictionary* entry = [NSMutableDictionary new];
 
                                 NSLog(@"%@ outtererjar descriptiong ##(#(#(#(#(#(#(#(#(#((#", [outterar description]);
-                                [matchesForUser addObject:[outterar objectForKey:@"groupmatches"]];
-                                [tableData addObject:keyd];
                                 
                                 entry[@"username"] = keyd;
+                                
                                 entry[@"matches"] = [outterar valueForKey:@"groupmatches"];
                                 
-                                [entries addObject:entry];
+                                if([entries count] > 0) {
+                                    for(int counter = 0; counter < [entries count]; counter++) {
+                                        if([[[entries objectAtIndex:counter] valueForKey:@"matches"] intValue] < [[entry valueForKey:@"matches"] intValue]) {
+                                            NSLog(@"GETTING IN IFFFFFF ABOOOVVEEEEE ******8888888*********");
+
+                                            //NSMutableDictionary *stud = [[NSMutableDictionary alloc] initWithObjectsAndKeys:keyd, @"username", nil];
+                                            [matchesForUser addObject:[outterar objectForKey:@"groupmatches"]];
+                                            [tableData addObject:keyd];
+                                            
+                                            NSLog(@"%@ WHAT IS ENTRIES>>>!!!!??!?!?!", [[entries objectAtIndex:counter] valueForKey:@"username"]);
+                                            if([keyd isEqualToString:[[entries objectAtIndex:counter] valueForKey:@"username"]]) {
+                                                NSLog(@"GETTING IN IFFFFFF ******8888888*********");
+                                                [entries removeObjectAtIndex:counter];
+                                                [entries insertObject:entry atIndex:counter];
+                                            }
+                                            else {
+                                                [entries addObject:entry];
+                                            }
+                                        }
+                                        else {
+                                            [entries addObject:entry];
+                                        }
+                                    }
+                                }
+                                else {
+                                    [matchesForUser addObject:[outterar objectForKey:@"groupmatches"]];
+                                    [tableData addObject:keyd];
+                                    [entries addObject:entry];
+                                }
+                                
+                                //[entries addObject:entry];
+                                //outerouter = [[NSString alloc] initWithString:[outterar valueForKey:@"idbyuser"]];
+                                //outeroutermatches = [[NSNumber alloc] initWithInt:[[outterar valueForKey:@"groupmatches"] intValue]];
                             }
                         }
                     }
@@ -387,11 +421,12 @@
         }
         else {
             NSLog(@"%ld INDEXPATH ABOVE***", (long)indexPath.row);
-            NSLog(@"%ld transfer COUNT ABOVE*****", [transfer2 count]);
+            NSLog(@"%ld transfer COUNT ABOVE*****", (unsigned long)[transfer2 count]);
             if(indexPath.row < [transfer2 count]) {
                 NSLog(@"%@", [[NSString alloc] initWithString:[[transfer2 objectAtIndex:indexPath.row] valueForKey:@"matches"]]);
-                
-                username2 = [[NSString alloc] initWithString:[[transfer2 objectAtIndex:indexPath.row] valueForKey:@"username"]];
+                //if(([[transfer2 objectAtIndex:indexPath.row] valueForKey:@"username"] != (id)[NSNull null])) {
+                    username2 = [[NSString alloc] initWithString:[[transfer2 objectAtIndex:indexPath.row] valueForKey:@"username"]];
+                //}
             }
         }
         
@@ -423,7 +458,7 @@
         }
         else {
             NSLog(@"%ld INDEXPATH ***", (long)indexPath.row);
-            NSLog(@"%ld transfer COUNT *****", [transfer2 count]);
+            NSLog(@"%ld transfer COUNT *****", (unsigned long)[transfer2 count]);
             if(indexPath.row < [transfer2 count]) {
                 NSLog(@"%@", [[NSString alloc] initWithString:[[transfer2 objectAtIndex:indexPath.row] valueForKey:@"matches"]]);
                 

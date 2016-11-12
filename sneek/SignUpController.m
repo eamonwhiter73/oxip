@@ -40,6 +40,10 @@
 
 @implementation SignUpController {}
 
+- (void)viewDidDisappear:(BOOL)animated {
+    [self dismissViewControllerAnimated:NO completion:NULL];
+}
+
 - (void)enableMyLocation
 {
     CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
@@ -245,8 +249,8 @@
         
         return;
     }
-    [user setValue:0 forKey:@"matches"];
-    [user setValue:0 forKey:@"groupmatches"];
+    [user setValue:@"0" forKey:@"matches"];
+    [user setValue:@"0" forKey:@"groupmatches"];
     
     [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (!error) {
@@ -261,15 +265,13 @@
             [userdefaults setInteger:0 forKey:@"count"];
             [userdefaults setInteger:0 forKey:@"groupcount"];
             [userdefaults synchronize];
-
-            [self dismissViewControllerAnimated:YES completion:nil];
-            
-            ViewController* map = [[ViewController alloc] init];
-            [[[[UIApplication sharedApplication] delegate] window] setRootViewController:map];
         } else {
             NSLog(@"%@", [error userInfo][@"error"]);
         }
     }];
+    
+    ViewController* map = [[ViewController alloc] init];
+    [[(AppDelegate*)[[UIApplication sharedApplication] delegate] navController] setViewControllers:@[map] animated:NO];
 }
 
 - (void)didReceiveMemoryWarning {

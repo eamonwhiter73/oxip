@@ -14,6 +14,7 @@
 
 @interface AppDelegate () {
     NSUserDefaults *userdefaults;
+    InvitedView *invitedView;
 }
 
 @end
@@ -28,6 +29,8 @@
     
     //NSLog(@"PRESENT******: %@", [notification description]);
     //[PFPush handlePush:notification.request.content.userInfo];
+    NSNumber *screenWidth = @([UIScreen mainScreen].bounds.size.width);
+
     
     if([[[NSString alloc] initWithString:notification.request.content.body] containsString:@"invited"]) {
         NSArray *arrayWithTwoStrings = [notification.request.content.body componentsSeparatedByString:@"!"];
@@ -37,37 +40,102 @@
         NSLog(@"object at index *********** %@", [invby objectAtIndex:0]);
         self.invitedby = [[NSString alloc] initWithString:[invby objectAtIndex:0]];
         NSLog(@"object at indexdddddd *********** %@", self.invitedby);
-        InvitedView *z = [[InvitedView alloc] initWithFrame:CGRectMake(50, 244, 220, 120)];
-        z.tag = 68;
-        [[[_navController.childViewControllers firstObject] view] addSubview:z];
-    }
-    
-    if( [UIApplication sharedApplication].applicationState == UIApplicationStateInactive )
-    {
-        NSLog( @"INACTIVE" );
-        [[[_navController childViewControllers] firstObject] performSelector:@selector(setAFlagForHid:) withObject:[NSNumber numberWithBool:YES]];
-        completionHandler( UNNotificationPresentationOptionAlert );
-        //_receivednotif = YES;
         
-    }
-    else if( [UIApplication sharedApplication].applicationState == UIApplicationStateBackground )
-    {
-        NSLog( @"BACKGROUND" );
-        [[[_navController childViewControllers] firstObject] performSelector:@selector(setAFlagForHid:) withObject:[NSNumber numberWithBool:YES]];
-        completionHandler( UNNotificationPresentationOptionAlert );
-        //_receivednotif = YES;
+        //[[[[_navController.childViewControllers firstObject] view] viewWithTag:68] performSelectorOnMainThread:@selector(setHoldUser:) withObject:self.invitedby waitUntilDone:YES];
+        //[[[_navController.childViewControllers firstObject] view] setNeedsLayout];
         
+        if([screenWidth intValue] == 320) {
+            invitedView = [[InvitedView alloc] initWithFrame:CGRectMake(50, 244, 220, 120)];
+        }
+        if([screenWidth intValue] == 375) {
+            invitedView = [[InvitedView alloc] initWithFrame:CGRectMake(77.5, 278.5, 220, 120)];
+        }
+        if([screenWidth intValue] == 414) {
+            invitedView = [[InvitedView alloc] initWithFrame:CGRectMake(57, 288, 300, 160)];
+        }
+        if([screenWidth intValue] == 768) {
+            invitedView = [[InvitedView alloc] initWithFrame:CGRectMake(84, 392, 500, 240)];
+        }
+        if([screenWidth intValue] == 1024) {
+            invitedView = [[InvitedView alloc] initWithFrame:CGRectMake(187, 443, 650, 420)];
+        }
+        
+        invitedView.tag = 68;
+        invitedView.backgroundColor = [UIColor colorWithRed:156.0f/255.0f green:214.0f/255.0f blue:215.0f/255.0f alpha:1.0f];
+        
+        NSLog(@"debug description navcontroller viewcontrollers ****###$$$$$%@", [_navController.childViewControllers debugDescription]);
+        if([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
+            [[[_navController.childViewControllers firstObject] view] addSubview:invitedView];
+            //[[[_navController.childViewControllers firstObject] view] bringSubviewToFront:[[[_navController.childViewControllers firstObject] view] viewWithTag:68]];
+            //[[[_navController.childViewControllers firstObject] view] setNeedsLayout];
+            completionHandler( UNNotificationPresentationOptionNone );
+        }
+        else {
+            //[[[[_navController.childViewControllers firstObject] view] viewWithTag:68] setNeedsLayout];
+            [[[_navController.childViewControllers firstObject] view] addSubview:invitedView];
+            //[[[_navController.childViewControllers firstObject] view] bringSubviewToFront:[[[_navController.childViewControllers firstObject] view] viewWithTag:68]];
+            //[[[_navController.childViewControllers firstObject] view] setNeedsLayout];
+            completionHandler( UNNotificationPresentationOptionAlert );
+        }
+        
+        /*if( [UIApplication sharedApplication].applicationState == UIApplicationStateInactive )
+        {
+            NSLog( @"INACTIVE" );
+            if([screenWidth intValue] == 320) {
+                z = [[InvitedView alloc] initWithFrame:CGRectMake(50, 244, 220, 120)];
+            }
+            if([screenWidth intValue] == 375) {
+                z = [[InvitedView alloc] initWithFrame:CGRectMake(77.5, 278.5, 220, 120)];
+            }
+            if([screenWidth intValue] == 414) {
+                z = [[InvitedView alloc] initWithFrame:CGRectMake(57, 288, 300, 160)];
+            }
+            if([screenWidth intValue] == 768) {
+                z = [[InvitedView alloc] initWithFrame:CGRectMake(84, 392, 500, 240)];
+            }
+            if([screenWidth intValue] == 1024) {
+                z = [[InvitedView alloc] initWithFrame:CGRectMake(187, 443, 650, 420)];
+            }
+            
+            z.tag = 68;
+            completionHandler( UNNotificationPresentationOptionAlert );
+            //_receivednotif = YES;
+            
+        }
+        else if( [UIApplication sharedApplication].applicationState == UIApplicationStateBackground )
+        {
+            NSLog( @"BACKGROUND" );
+            if([screenWidth intValue] == 320) {
+                z = [[InvitedView alloc] initWithFrame:CGRectMake(50, 244, 220, 120)];
+            }
+            if([screenWidth intValue] == 375) {
+                z = [[InvitedView alloc] initWithFrame:CGRectMake(77.5, 278.5, 220, 120)];
+            }
+            if([screenWidth intValue] == 414) {
+                z = [[InvitedView alloc] initWithFrame:CGRectMake(57, 288, 300, 160)];
+            }
+            if([screenWidth intValue] == 768) {
+                z = [[InvitedView alloc] initWithFrame:CGRectMake(84, 392, 500, 240)];
+            }
+            if([screenWidth intValue] == 1024) {
+                z = [[InvitedView alloc] initWithFrame:CGRectMake(187, 443, 650, 420)];
+            }
+            
+            z.tag = 68;
+            completionHandler( UNNotificationPresentationOptionAlert );
+            //_receivednotif = YES;
+            
+        }
+        else
+        {
+            NSLog( @"FOREGROUND" );
+            NSLog(@"%@", [[_navController childViewControllers] firstObject]);
+            [[[_navController childViewControllers] firstObject] performSelector:@selector(setAFlagForHid:) withObject:[NSNumber numberWithBool:YES]];
+            //completionHandler( UNNotificationPresentationOptionAlert );
+            //_receivednotif = YES;
+        }*/
     }
-    else
-    {
-        NSLog( @"FOREGROUND" );
-        NSLog(@"%@", [[_navController childViewControllers] firstObject]);
-        [[[_navController childViewControllers] firstObject] performSelector:@selector(setAFlagForHid:) withObject:[NSNumber numberWithBool:YES]];
-        //completionHandler( UNNotificationPresentationOptionAlert );
-        //_receivednotif = YES;
-    }
-    
-    //completionHandler(UNNotificationPresentationOptionAlert);
+    completionHandler(UNNotificationPresentationOptionAlert);
 }
 
 - (NSString*)getIdbyusy {
@@ -85,10 +153,32 @@
     
     // custom code to handle notification content*/
     
+    NSNumber *screenWidth = @([UIScreen mainScreen].bounds.size.width);
+    
     if( [UIApplication sharedApplication].applicationState == UIApplicationStateInactive )
     {
         NSLog( @"INACTIVE" );
-        [[[[[[[UIApplication sharedApplication] delegate] window] rootViewController] childViewControllers] firstObject] performSelector:@selector(setAFlagForHid:) withObject:[NSNumber numberWithBool:YES]];
+        if([screenWidth intValue] == 320) {
+            invitedView = [[InvitedView alloc] initWithFrame:CGRectMake(50, 244, 220, 120)];
+        }
+        if([screenWidth intValue] == 375) {
+            invitedView = [[InvitedView alloc] initWithFrame:CGRectMake(77.5, 278.5, 220, 120)];
+        }
+        if([screenWidth intValue] == 414) {
+            invitedView = [[InvitedView alloc] initWithFrame:CGRectMake(57, 288, 300, 160)];
+        }
+        if([screenWidth intValue] == 768) {
+            invitedView = [[InvitedView alloc] initWithFrame:CGRectMake(84, 392, 500, 240)];
+        }
+        if([screenWidth intValue] == 1024) {
+            invitedView = [[InvitedView alloc] initWithFrame:CGRectMake(187, 443, 650, 420)];
+        }
+        
+        invitedView.tag = 68;
+        invitedView.backgroundColor = [UIColor colorWithRed:156.0f/255.0f green:214.0f/255.0f blue:215.0f/255.0f alpha:1.0f];
+        
+        [[[_navController.childViewControllers firstObject] view] addSubview:invitedView];
+
         completionHandler( UIBackgroundFetchResultNewData );
         //_receivednotif = YES;
         
@@ -96,10 +186,29 @@
     else if( [UIApplication sharedApplication].applicationState == UIApplicationStateBackground )
     {
         NSLog( @"BACKGROUND" );
-        [[[[[[[UIApplication sharedApplication] delegate] window] rootViewController] childViewControllers] firstObject] performSelector:@selector(setAFlagForHid:) withObject:[NSNumber numberWithBool:YES]];
+        if([screenWidth intValue] == 320) {
+            invitedView = [[InvitedView alloc] initWithFrame:CGRectMake(50, 244, 220, 120)];
+        }
+        if([screenWidth intValue] == 375) {
+            invitedView = [[InvitedView alloc] initWithFrame:CGRectMake(77.5, 278.5, 220, 120)];
+        }
+        if([screenWidth intValue] == 414) {
+            invitedView = [[InvitedView alloc] initWithFrame:CGRectMake(57, 288, 300, 160)];
+        }
+        if([screenWidth intValue] == 768) {
+            invitedView = [[InvitedView alloc] initWithFrame:CGRectMake(84, 392, 500, 240)];
+        }
+        if([screenWidth intValue] == 1024) {
+            invitedView = [[InvitedView alloc] initWithFrame:CGRectMake(187, 443, 650, 420)];
+        }
+        
+        invitedView.tag = 68;
+        invitedView.backgroundColor = [UIColor colorWithRed:156.0f/255.0f green:214.0f/255.0f blue:215.0f/255.0f alpha:1.0f];
+        
+        [[[_navController.childViewControllers firstObject] view] addSubview:invitedView];
+        
         completionHandler( UIBackgroundFetchResultNewData );
         //_receivednotif = YES;
-        
     }
     else
     {
